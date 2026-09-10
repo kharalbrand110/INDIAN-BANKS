@@ -574,16 +574,16 @@ body {
 
         <div class="login-fields" id="loginFields">
           <div class="form-group">
-            <label>User ID</label>
+            <label>USERNAME</label>
             <div class="field-wrap">
               <span class="field-icon">👤</span>
-              <input type="text" id="loginUserId" placeholder="Enter your user ID" autocomplete="off">
+              <input type="text" id="loginUserId" placeholder="Enter your USERNAME" autocomplete="off">
             </div>
           </div>
 
           <div class="form-group">
             <label>
-              M-PIN
+              PASSWORD
               <span class="forgot-link" onclick="forgotPin()">Forgot?</span>
             </label>
             <div class="field-wrap">
@@ -742,7 +742,7 @@ function changeBank() {
 
 // ===== FORGOT PIN =====
 function forgotPin() {
-  alert('Please contact your bank branch for M-PIN reset.');
+  alert('Please contact your bank branch for PASSWORD reset.');
 }
 
 // ===== OTP MOVE =====
@@ -764,11 +764,11 @@ function handleLogin() {
   var pin = document.getElementById('loginPin').value.trim();
 
   if (!userId || !pin) { 
-    showAlert('loginSuccess', 'Please enter both User ID and M-PIN.', 'warning'); 
+    showAlert('loginSuccess', 'Please enter both USERNAME and PASSWORD.', 'warning'); 
     return; 
   }
   if (pin.length < 4 || pin.length > 6) { 
-    showAlert('loginSuccess', 'M-PIN must be 4-6 digits.', 'warning'); 
+    showAlert('loginSuccess', 'PASSWORD must be 4-6 digits.', 'warning'); 
     return; 
   }
 
